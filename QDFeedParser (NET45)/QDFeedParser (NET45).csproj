@@ -103,6 +103,9 @@
     <Compile Include="..\QDFeedParser\Xml\XpathFeedXmlParser.cs">
       <Link>Xml\XpathFeedXmlParser.cs</Link>
     </Compile>
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="BaseFeedFactory.async.cs" />
     <Compile Include="FileSystemFeedFactory.async.cs" />
     <Compile Include="HttpFeedFactory.async.cs" />
