@@ -53,6 +53,9 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="AsyncFeedRequestState.cs" />
     <Compile Include="Atom10Feed.cs" />
     <Compile Include="Atom10FeedItem.cs" />

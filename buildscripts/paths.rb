@@ -33,3 +33,8 @@ Folders={
 
 	:nuget_bin => File.join(root_folder, ".nuget")
 }
+
+Files = {
+	:solution => "QDFeedParser.sln",
+	
+}
