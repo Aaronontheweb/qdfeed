@@ -37,3 +37,4 @@ _ReSharper*/
 Thumbs.db
 #Ignore files build by Visual Studio
 [Dd]ebug*/
+packages*/
