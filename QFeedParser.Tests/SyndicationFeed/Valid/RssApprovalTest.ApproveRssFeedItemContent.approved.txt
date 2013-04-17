@@ -1,4 +1,4 @@
-feed items[0] = Title: How to Query a User's del.icio.us Feed with RestSharp
+﻿feed items[0] = Title: How to Query a User's del.icio.us Feed with RestSharp
 Published: 6/14/2010 5:26:00 PM
 URL: http://www.aaronstannard.com/post/2010/06/14/How-to-Parse-a-Users-Delicious-Feed-with-RestSharp.aspx
 Author: Aaronontheweb

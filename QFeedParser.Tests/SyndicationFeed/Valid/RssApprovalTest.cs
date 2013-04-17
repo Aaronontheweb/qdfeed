@@ -31,7 +31,7 @@ namespace QDFeedParser.Tests.SyndicationFeed.Valid
             var feed = Factory.CreateFeed(feeduri);
             var strFeedItems = from feeditem in feed.Items
                                select feeditem.ToApprovalString();
-            Approvals.Approve(strFeedItems, "feed items");
+            Approvals.VerifyAll(strFeedItems, "feed items");
         }
 
         [UseReporter(typeof(DiffReporter))]
@@ -41,7 +41,7 @@ namespace QDFeedParser.Tests.SyndicationFeed.Valid
             var feed = Factory.CreateFeed(feeduri);
             var strFeedItems = from feeditem in feed.Items
                                select feeditem.ToApprovalString();
-            Approvals.Approve(strFeedItems, "feed items");
+            Approvals.VerifyAll(strFeedItems, "feed items");
         }
 
 
@@ -52,7 +52,7 @@ namespace QDFeedParser.Tests.SyndicationFeed.Valid
             var feed = Factory.CreateFeed(feeduri);
             var strFeedItems = from feeditem in feed.Items.Take(itemCount)
                                select feeditem.ToApprovalString();
-            Approvals.Approve(strFeedItems, "feed items");
+            Approvals.VerifyAll(strFeedItems, "feed items");
         }
 
     }

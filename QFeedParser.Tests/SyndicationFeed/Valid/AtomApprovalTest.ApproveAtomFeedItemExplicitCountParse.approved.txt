@@ -1,4 +1,4 @@
-feed items[0] = Title: SmartDraw 2010 Guided Tour
+﻿feed items[0] = Title: SmartDraw 2010 Guided Tour
 Published: 5/31/2010 2:48:53 PM
 URL: http://www.youtube.com/watch?v=NJPrllhYZrg&feature=youtube_gdata
 Author: smartdraw
