@@ -1,0 +1,243 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://web.resource.org/cc/">
+  <channel>
+    <title>Delicious/Aaronontheweb</title>
+    <link>http://delicious.com/Aaronontheweb</link>
+    <description>bookmarks posted by Aaronontheweb</description>
+    <atom:link rel="self" type="application/rss+xml" href="http://feeds.delicious.com/v2/rss/Aaronontheweb?count=15"/>
+    <item>
+      <title>Simulate a Windows Service using ASP.NET to run scheduled jobs - CodeProject</title>
+      <pubDate>Wed, 16 Jun 2010 17:45:37 +0000</pubDate>
+      <guid isPermaLink="false">http://delicious.com/url/9e6381ba756d1cae074e3dfc5877043f#Aaronontheweb</guid>
+      <link>http://www.codeproject.com/KB/aspnet/ASPNETService.aspx</link>
+      <dc:creator><![CDATA[Aaronontheweb]]></dc:creator>
+      <comments>http://delicious.com/url/9e6381ba756d1cae074e3dfc5877043f</comments>
+      <wfw:commentRss>http://feeds.delicious.com/v2/rss/url/9e6381ba756d1cae074e3dfc5877043f</wfw:commentRss>
+      <source url="http://feeds.delicious.com/v2/rss/Aaronontheweb">Aaronontheweb's bookmarks</source>
+      <category domain="http://delicious.com/Aaronontheweb/">ASP.NET</category>
+      <category domain="http://delicious.com/Aaronontheweb/">cache</category>
+      <category domain="http://delicious.com/Aaronontheweb/">task</category>
+      <category domain="http://delicious.com/Aaronontheweb/">Windows</category>
+      <category domain="http://delicious.com/Aaronontheweb/">service</category>
+    </item>
+    <item>
+      <title>Scheduled jobs in ASP.NET website without buying dedicated servers. - Stack Overflow</title>
+      <pubDate>Wed, 16 Jun 2010 17:45:09 +0000</pubDate>
+      <guid isPermaLink="false">http://delicious.com/url/3cc8fcb9748e44bb43162be0e4f3e998#Aaronontheweb</guid>
+      <link>http://stackoverflow.com/questions/733643/scheduled-jobs-in-asp-net-website-without-buying-dedicated-servers</link>
+      <dc:creator><![CDATA[Aaronontheweb]]></dc:creator>
+      <comments>http://delicious.com/url/3cc8fcb9748e44bb43162be0e4f3e998</comments>
+      <wfw:commentRss>http://feeds.delicious.com/v2/rss/url/3cc8fcb9748e44bb43162be0e4f3e998</wfw:commentRss>
+      <source url="http://feeds.delicious.com/v2/rss/Aaronontheweb">Aaronontheweb's bookmarks</source>
+      <category domain="http://delicious.com/Aaronontheweb/">ASP.NET</category>
+      <category domain="http://delicious.com/Aaronontheweb/">scheduling</category>
+      <category domain="http://delicious.com/Aaronontheweb/">tasks</category>
+      <category domain="http://delicious.com/Aaronontheweb/">caching</category>
+    </item>
+    <item>
+      <title>CodeCube.NET » ASP.NET MVC Charts</title>
+      <pubDate>Tue, 15 Jun 2010 18:13:27 +0000</pubDate>
+      <guid isPermaLink="false">http://delicious.com/url/4e2745bd9e9fda84cba2b702c958c86f#Aaronontheweb</guid>
+      <link>http://codecube.net/2010/06/asp-net-mvc-charts/</link>
+      <dc:creator><![CDATA[Aaronontheweb]]></dc:creator>
+      <comments>http://delicious.com/url/4e2745bd9e9fda84cba2b702c958c86f</comments>
+      <wfw:commentRss>http://feeds.delicious.com/v2/rss/url/4e2745bd9e9fda84cba2b702c958c86f</wfw:commentRss>
+      <source url="http://feeds.delicious.com/v2/rss/Aaronontheweb">Aaronontheweb's bookmarks</source>
+      <description>An introduction to using the charting libraries in the ASP.NET MVC framework.</description>
+      <category domain="http://delicious.com/Aaronontheweb/">.net</category>
+      <category domain="http://delicious.com/Aaronontheweb/">chart</category>
+      <category domain="http://delicious.com/Aaronontheweb/">MVC</category>
+      <category domain="http://delicious.com/Aaronontheweb/">ASP.NET</category>
+    </item>
+    <item>
+      <title>http://john-sheehan.com/blog/wp-content/uploads/msnet-formatting-strings.pdf</title>
+      <pubDate>Tue, 15 Jun 2010 06:56:13 +0000</pubDate>
+      <guid isPermaLink="false">http://delicious.com/url/ac2df94770c37fe442a5ad6aa2025453#Aaronontheweb</guid>
+      <link>http://john-sheehan.com/blog/wp-content/uploads/msnet-formatting-strings.pdf</link>
+      <dc:creator><![CDATA[Aaronontheweb]]></dc:creator>
+      <comments>http://delicious.com/url/ac2df94770c37fe442a5ad6aa2025453</comments>
+      <wfw:commentRss>http://feeds.delicious.com/v2/rss/url/ac2df94770c37fe442a5ad6aa2025453</wfw:commentRss>
+      <source url="http://feeds.delicious.com/v2/rss/Aaronontheweb">Aaronontheweb's bookmarks</source>
+      <description>A complete cheat sheet for all of the different datetime format strings in .NET</description>
+      <category domain="http://delicious.com/Aaronontheweb/">.net</category>
+      <category domain="http://delicious.com/Aaronontheweb/">c#</category>
+      <category domain="http://delicious.com/Aaronontheweb/">string</category>
+      <category domain="http://delicious.com/Aaronontheweb/">datetime</category>
+      <category domain="http://delicious.com/Aaronontheweb/">ASP.NET</category>
+      <category domain="http://delicious.com/Aaronontheweb/">system:filetype:pdf</category>
+      <category domain="http://delicious.com/Aaronontheweb/">system:media:document</category>
+      <enclosure url="http://john-sheehan.com/blog/wp-content/uploads/msnet-formatting-strings.pdf" type="application/pdf" length="1"/>
+    </item>
+    <item>
+      <title>Markov chain - Wikipedia, the free encyclopedia</title>
+      <pubDate>Sun, 13 Jun 2010 01:50:41 +0000</pubDate>
+      <guid isPermaLink="false">http://delicious.com/url/4981eb99e9a0effb024c1c30f5ed630a#Aaronontheweb</guid>
+      <link>http://en.wikipedia.org/wiki/Markov_Chain</link>
+      <dc:creator><![CDATA[Aaronontheweb]]></dc:creator>
+      <comments>http://delicious.com/url/4981eb99e9a0effb024c1c30f5ed630a</comments>
+      <wfw:commentRss>http://feeds.delicious.com/v2/rss/url/4981eb99e9a0effb024c1c30f5ed630a</wfw:commentRss>
+      <source url="http://feeds.delicious.com/v2/rss/Aaronontheweb">Aaronontheweb's bookmarks</source>
+      <category domain="http://delicious.com/Aaronontheweb/">statistics</category>
+      <category domain="http://delicious.com/Aaronontheweb/">programming</category>
+      <category domain="http://delicious.com/Aaronontheweb/">alogirthm</category>
+      <category domain="http://delicious.com/Aaronontheweb/">datamining</category>
+    </item>
+    <item>
+      <title>tf–idf - term frequency-inverse document frequency</title>
+      <pubDate>Sun, 13 Jun 2010 01:47:04 +0000</pubDate>
+      <guid isPermaLink="false">http://delicious.com/url/ca32a71ce919ac6aa5f2073458fccb64#Aaronontheweb</guid>
+      <link>http://en.wikipedia.org/wiki/Tf-idf</link>
+      <dc:creator><![CDATA[Aaronontheweb]]></dc:creator>
+      <comments>http://delicious.com/url/ca32a71ce919ac6aa5f2073458fccb64</comments>
+      <wfw:commentRss>http://feeds.delicious.com/v2/rss/url/ca32a71ce919ac6aa5f2073458fccb64</wfw:commentRss>
+      <source url="http://feeds.delicious.com/v2/rss/Aaronontheweb">Aaronontheweb's bookmarks</source>
+      <description>A statistical measure used in text / data mining to evaluate how important a particular word is to a document in a collection.</description>
+      <category domain="http://delicious.com/Aaronontheweb/">algorithm</category>
+      <category domain="http://delicious.com/Aaronontheweb/">datamining</category>
+      <category domain="http://delicious.com/Aaronontheweb/">parsing</category>
+    </item>
+    <item>
+      <title>25 Tools for Bootstrapped Startups</title>
+      <pubDate>Wed, 09 Jun 2010 05:46:06 +0000</pubDate>
+      <guid isPermaLink="false">http://delicious.com/url/46cd97851dae66d38a44e6c47c1a73cb#Aaronontheweb</guid>
+      <link>http://storecrowd.com/blog/startup-tools/</link>
+      <dc:creator><![CDATA[Aaronontheweb]]></dc:creator>
+      <comments>http://delicious.com/url/46cd97851dae66d38a44e6c47c1a73cb</comments>
+      <wfw:commentRss>http://feeds.delicious.com/v2/rss/url/46cd97851dae66d38a44e6c47c1a73cb</wfw:commentRss>
+      <source url="http://feeds.delicious.com/v2/rss/Aaronontheweb">Aaronontheweb's bookmarks</source>
+      <category domain="http://delicious.com/Aaronontheweb/">startup</category>
+      <category domain="http://delicious.com/Aaronontheweb/">bootstrap</category>
+      <category domain="http://delicious.com/Aaronontheweb/">entrepreneurship</category>
+    </item>
+    <item>
+      <title>The 'Microsoft.ACE.OLEDB.12.0' provider is not registered on the local machine.</title>
+      <pubDate>Wed, 09 Jun 2010 02:35:23 +0000</pubDate>
+      <guid isPermaLink="false">http://delicious.com/url/76148091405559c9e7f585261f0ac8fd#Aaronontheweb</guid>
+      <link>http://social.msdn.microsoft.com/Forums/en-US/vsto/thread/43d6b544-7172-4fe7-babf-a541e5f6a1c9</link>
+      <dc:creator><![CDATA[Aaronontheweb]]></dc:creator>
+      <comments>http://delicious.com/url/76148091405559c9e7f585261f0ac8fd</comments>
+      <wfw:commentRss>http://feeds.delicious.com/v2/rss/url/76148091405559c9e7f585261f0ac8fd</wfw:commentRss>
+      <source url="http://feeds.delicious.com/v2/rss/Aaronontheweb">Aaronontheweb's bookmarks</source>
+      <category domain="http://delicious.com/Aaronontheweb/">ole</category>
+      <category domain="http://delicious.com/Aaronontheweb/">Microsoft</category>
+      <category domain="http://delicious.com/Aaronontheweb/">excel</category>
+      <category domain="http://delicious.com/Aaronontheweb/">2007</category>
+      <category domain="http://delicious.com/Aaronontheweb/">.net</category>
+    </item>
+    <item>
+      <title>Data Feed Query Explorer - Google Analytics - Google Code</title>
+      <pubDate>Sat, 05 Jun 2010 00:06:53 +0000</pubDate>
+      <guid isPermaLink="false">http://delicious.com/url/b250b7137de684846743bde8591a9795#Aaronontheweb</guid>
+      <link>http://code.google.com/apis/analytics/docs/gdata/gdataExplorer.html</link>
+      <dc:creator><![CDATA[Aaronontheweb]]></dc:creator>
+      <comments>http://delicious.com/url/b250b7137de684846743bde8591a9795</comments>
+      <wfw:commentRss>http://feeds.delicious.com/v2/rss/url/b250b7137de684846743bde8591a9795</wfw:commentRss>
+      <source url="http://feeds.delicious.com/v2/rss/Aaronontheweb">Aaronontheweb's bookmarks</source>
+      <description>A tool for testing the GData feeds returned by the Google Analyitics Data Export API. It should be noted that this tool does not work in IE.</description>
+      <category domain="http://delicious.com/Aaronontheweb/">Google</category>
+      <category domain="http://delicious.com/Aaronontheweb/">API</category>
+      <category domain="http://delicious.com/Aaronontheweb/">analytics</category>
+      <category domain="http://delicious.com/Aaronontheweb/">tools</category>
+      <category domain="http://delicious.com/Aaronontheweb/">data</category>
+      <category domain="http://delicious.com/Aaronontheweb/">export</category>
+    </item>
+    <item>
+      <title>Window.DialogResult Property (System.Windows)</title>
+      <pubDate>Sat, 05 Jun 2010 00:05:25 +0000</pubDate>
+      <guid isPermaLink="false">http://delicious.com/url/71157f2b9b18d906bd54172758a90257#Aaronontheweb</guid>
+      <link>http://msdn.microsoft.com/en-us/library/system.windows.window.dialogresult.aspx</link>
+      <dc:creator><![CDATA[Aaronontheweb]]></dc:creator>
+      <comments>http://delicious.com/url/71157f2b9b18d906bd54172758a90257</comments>
+      <wfw:commentRss>http://feeds.delicious.com/v2/rss/url/71157f2b9b18d906bd54172758a90257</wfw:commentRss>
+      <source url="http://feeds.delicious.com/v2/rss/Aaronontheweb">Aaronontheweb's bookmarks</source>
+      <description>Learned that in order for DialogResult to return true in the parent&amp;#039;s context that the value has to be manually set to true by the &amp;quot;ok&amp;quot; button&amp;#039;s click event. In Windows Forms this occurs automatically so this came as a surprise to me, but MSDN makes it clear in this documentation that that&amp;#039;s what is going on.</description>
+      <category domain="http://delicious.com/Aaronontheweb/">wpf</category>
+      <category domain="http://delicious.com/Aaronontheweb/">.net</category>
+      <category domain="http://delicious.com/Aaronontheweb/">c#</category>
+      <category domain="http://delicious.com/Aaronontheweb/">dialogs</category>
+    </item>
+    <item>
+      <title>Windows Presentation Foundation (WPF) Dialog Boxes Overview</title>
+      <pubDate>Fri, 04 Jun 2010 23:48:12 +0000</pubDate>
+      <guid isPermaLink="false">http://delicious.com/url/586481cfeb62aa92708a096ef94db4c9#Aaronontheweb</guid>
+      <link>http://msdn.microsoft.com/en-us/library/aa969773.aspx</link>
+      <dc:creator><![CDATA[Aaronontheweb]]></dc:creator>
+      <comments>http://delicious.com/url/586481cfeb62aa92708a096ef94db4c9</comments>
+      <wfw:commentRss>http://feeds.delicious.com/v2/rss/url/586481cfeb62aa92708a096ef94db4c9</wfw:commentRss>
+      <source url="http://feeds.delicious.com/v2/rss/Aaronontheweb">Aaronontheweb's bookmarks</source>
+      <description>How to use dialog boxes in WPF (for WPF noobs like myself.)</description>
+      <category domain="http://delicious.com/Aaronontheweb/">.net</category>
+      <category domain="http://delicious.com/Aaronontheweb/">wpf</category>
+      <category domain="http://delicious.com/Aaronontheweb/">dialogs</category>
+      <category domain="http://delicious.com/Aaronontheweb/">tutorial</category>
+      <category domain="http://delicious.com/Aaronontheweb/">nullable</category>
+      <category domain="http://delicious.com/Aaronontheweb/">c#</category>
+    </item>
+    <item>
+      <title>Developer's Guide: Data API Protocol - YouTube APIs and Tools - Google Code</title>
+      <pubDate>Mon, 31 May 2010 22:43:47 +0000</pubDate>
+      <guid isPermaLink="false">http://delicious.com/url/ee6024aa6f4bda652b8f3ebe08885037#Aaronontheweb</guid>
+      <link>http://code.google.com/apis/youtube/2.0/developers_guide_protocol.html#Developer_Key</link>
+      <dc:creator><![CDATA[Aaronontheweb]]></dc:creator>
+      <comments>http://delicious.com/url/ee6024aa6f4bda652b8f3ebe08885037</comments>
+      <wfw:commentRss>http://feeds.delicious.com/v2/rss/url/ee6024aa6f4bda652b8f3ebe08885037</wfw:commentRss>
+      <source url="http://feeds.delicious.com/v2/rss/Aaronontheweb">Aaronontheweb's bookmarks</source>
+      <description>Finally figured it out - how to sign all requests with my API key using a querystring. So simple, yet so difficult.</description>
+      <category domain="http://delicious.com/Aaronontheweb/">youtube</category>
+      <category domain="http://delicious.com/Aaronontheweb/">API</category>
+      <category domain="http://delicious.com/Aaronontheweb/">key</category>
+      <category domain="http://delicious.com/Aaronontheweb/">Google</category>
+      <category domain="http://delicious.com/Aaronontheweb/">gdata</category>
+    </item>
+    <item>
+      <title>Validation QuickStarts</title>
+      <pubDate>Mon, 31 May 2010 18:19:15 +0000</pubDate>
+      <guid isPermaLink="false">http://delicious.com/url/af057852abb236e5da1320b83fcbfe43#Aaronontheweb</guid>
+      <link>http://msdn.microsoft.com/en-us/library/ff649963.aspx</link>
+      <dc:creator><![CDATA[Aaronontheweb]]></dc:creator>
+      <comments>http://delicious.com/url/af057852abb236e5da1320b83fcbfe43</comments>
+      <wfw:commentRss>http://feeds.delicious.com/v2/rss/url/af057852abb236e5da1320b83fcbfe43</wfw:commentRss>
+      <source url="http://feeds.delicious.com/v2/rss/Aaronontheweb">Aaronontheweb's bookmarks</source>
+      <description>A series of QuickStart tutorials for the Microsoft Enterprise Library Validation Application Block 4.1</description>
+      <category domain="http://delicious.com/Aaronontheweb/">Microsoft</category>
+      <category domain="http://delicious.com/Aaronontheweb/">Enterprise</category>
+      <category domain="http://delicious.com/Aaronontheweb/">Library</category>
+      <category domain="http://delicious.com/Aaronontheweb/">Validation</category>
+      <category domain="http://delicious.com/Aaronontheweb/">Application</category>
+      <category domain="http://delicious.com/Aaronontheweb/">Block</category>
+      <category domain="http://delicious.com/Aaronontheweb/">.net</category>
+      <category domain="http://delicious.com/Aaronontheweb/">tutorial</category>
+    </item>
+    <item>
+      <title>Your first NHibernate based application - NHibernate Forge</title>
+      <pubDate>Mon, 31 May 2010 18:18:04 +0000</pubDate>
+      <guid isPermaLink="false">http://delicious.com/url/266e90fd6c4e22a386e98cf6b1a96ef5#Aaronontheweb</guid>
+      <link>http://nhforge.org/wikis/howtonh/your-first-nhibernate-based-application.aspx</link>
+      <dc:creator><![CDATA[Aaronontheweb]]></dc:creator>
+      <comments>http://delicious.com/url/266e90fd6c4e22a386e98cf6b1a96ef5</comments>
+      <wfw:commentRss>http://feeds.delicious.com/v2/rss/url/266e90fd6c4e22a386e98cf6b1a96ef5</wfw:commentRss>
+      <source url="http://feeds.delicious.com/v2/rss/Aaronontheweb">Aaronontheweb's bookmarks</source>
+      <category domain="http://delicious.com/Aaronontheweb/">C#</category>
+      <category domain="http://delicious.com/Aaronontheweb/">.net</category>
+      <category domain="http://delicious.com/Aaronontheweb/">nhibernate</category>
+      <category domain="http://delicious.com/Aaronontheweb/">DAL</category>
+      <category domain="http://delicious.com/Aaronontheweb/">data</category>
+      <category domain="http://delicious.com/Aaronontheweb/">tutorial</category>
+    </item>
+    <item>
+      <title>Google Weather API with RestSharp « lukencode</title>
+      <pubDate>Mon, 31 May 2010 18:17:22 +0000</pubDate>
+      <guid isPermaLink="false">http://delicious.com/url/0c72ee6d73c359d2c06372e2a15ede38#Aaronontheweb</guid>
+      <link>http://lukencode.com/2010/04/14/google-weather-api-with-restsharp/</link>
+      <dc:creator><![CDATA[Aaronontheweb]]></dc:creator>
+      <comments>http://delicious.com/url/0c72ee6d73c359d2c06372e2a15ede38</comments>
+      <wfw:commentRss>http://feeds.delicious.com/v2/rss/url/0c72ee6d73c359d2c06372e2a15ede38</wfw:commentRss>
+      <source url="http://feeds.delicious.com/v2/rss/Aaronontheweb">Aaronontheweb's bookmarks</source>
+      <category domain="http://delicious.com/Aaronontheweb/">Google</category>
+      <category domain="http://delicious.com/Aaronontheweb/">Weather</category>
+      <category domain="http://delicious.com/Aaronontheweb/">RestSharp</category>
+      <category domain="http://delicious.com/Aaronontheweb/">REST</category>
+      <category domain="http://delicious.com/Aaronontheweb/">.net</category>
+    </item>
+  </channel>
+</rss>

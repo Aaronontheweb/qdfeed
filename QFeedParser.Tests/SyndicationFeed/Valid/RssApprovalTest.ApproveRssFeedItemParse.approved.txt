@@ -1,0 +1,867 @@
+feed items[0] = Title: How to Query a User's del.icio.us Feed with RestSharp
+Published: 6/14/2010 5:26:00 PM
+URL: http://www.aaronstannard.com/post/2010/06/14/How-to-Parse-a-Users-Delicious-Feed-with-RestSharp.aspx
+Author: Aaronontheweb
+Id: http://www.aaronstannard.com/post.aspx?id=65c351cf-dfd5-4508-a2b9-6f9c2a5c1251
+Content: 
+        <p>I've been meaning to give <a href="http://restsharp.org/">RestSharp</a> a go since I first started using Hammock in my startup project's codebase, just because <a href="http://herdingcode.com/?p=244">I had heard&nbsp;some good things&nbsp;about&nbsp;RestSharp's auto-parsing capabilities</a>.</p>
+        <p>This weekend I cobbled together a small example using del.icio.us' RSS feeds (not to be confused with its draconian REST API) for users and RestSharp performed magnificently, although its POCO -&gt; XML Element mapping process requires a lot of experimentation before you get it just right.</p>
+        <p>Here's an example RSS feed for <a href="http://delicious.com/Aaronontheweb">my personal del.icio.us account</a>:</p>
+        <pre class="brush: xml;">&lt;rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://web.resource.org/cc/"&gt;
+        &lt;channel&gt;
+        &lt;title&gt;Delicious/Aaronontheweb&lt;/title&gt;
+        &lt;link&gt;http://delicious.com/Aaronontheweb&lt;/link&gt;
+        &lt;description&gt;bookmarks posted by Aaronontheweb&lt;/description&gt;
+        &lt;atom:link rel="self" type="application/rss+xml" href="http://feeds.delicious.com/v2/rss/Aaronontheweb?count=2"/&gt;
+        &lt;item&gt;
+        &lt;title&gt;Windows Presentation Foundation (WPF) Dialog Boxes Overview&lt;/title&gt;
+        &lt;pubDate&gt;Fri, 04 Jun 2010 23:48:12 +0000&lt;/pubDate&gt;
+        &lt;guid isPermaLink="false"&gt;[REMOVED]&lt;/guid&gt;
+        &lt;link&gt;http://msdn.microsoft.com/en-us/library/aa969773.aspx&lt;/link&gt;
+        &lt;dc:creator&gt;&lt;![CDATA[Aaronontheweb]]&gt;&lt;/dc:creator&gt;
+        &lt;comments&gt;[REMOVED]&lt;/comments&gt;
+        &lt;wfw:commentRss&gt;[REMOVED]&lt;/wfw:commentRss&gt;
+        &lt;source url="http://feeds.delicious.com/v2/rss/Aaronontheweb"&gt;Aaronontheweb's bookmarks&lt;/source&gt;
+        &lt;description&gt;How to use dialog boxes in WPF (for WPF noobs like myself.)&lt;/description&gt;
+        &lt;category domain="http://delicious.com/Aaronontheweb/"&gt;.net&lt;/category&gt;
+        &lt;category domain="http://delicious.com/Aaronontheweb/"&gt;wpf&lt;/category&gt;
+        &lt;category domain="http://delicious.com/Aaronontheweb/"&gt;dialogs&lt;/category&gt;
+        &lt;category domain="http://delicious.com/Aaronontheweb/"&gt;tutorial&lt;/category&gt;
+        &lt;category domain="http://delicious.com/Aaronontheweb/"&gt;nullable&lt;/category&gt;
+        &lt;category domain="http://delicious.com/Aaronontheweb/"&gt;c#&lt;/category&gt;
+        &lt;/item&gt;
+        &lt;item&gt;
+        &lt;title&gt;Developer's Guide: Data API Protocol - YouTube APIs and Tools - Google Code&lt;/title&gt;
+        &lt;pubDate&gt;Mon, 31 May 2010 22:43:47 +0000&lt;/pubDate&gt;
+        &lt;guid isPermaLink="false"&gt;[REMOVED]&lt;/guid&gt;
+        &lt;link&gt;[REMOVED]&lt;/link&gt;
+        &lt;dc:creator&gt;&lt;![CDATA[Aaronontheweb]]&gt;&lt;/dc:creator&gt;
+        &lt;comments&gt;[REMOVED]&lt;/comments&gt;
+        &lt;wfw:commentRss&gt;[REMOVED]&lt;/wfw:commentRss&gt;
+        &lt;source url="http://feeds.delicious.com/v2/rss/Aaronontheweb"&gt;Aaronontheweb's bookmarks&lt;/source&gt;
+        &lt;description&gt;Finally figured it out - how to sign all requests with my API key using a querystring. So simple, yet so difficult.&lt;/description&gt;
+        &lt;category domain="http://delicious.com/Aaronontheweb/"&gt;youtube&lt;/category&gt;
+        &lt;category domain="http://delicious.com/Aaronontheweb/"&gt;API&lt;/category&gt;
+        &lt;category domain="http://delicious.com/Aaronontheweb/"&gt;key&lt;/category&gt;
+        &lt;category domain="http://delicious.com/Aaronontheweb/"&gt;Google&lt;/category&gt;
+        &lt;category domain="http://delicious.com/Aaronontheweb/"&gt;gdata&lt;/category&gt;
+        &lt;/item&gt;
+        &lt;/channel&gt;
+        &lt;/rss&gt;</pre>
+        <p>The best way to utilize RestSharp to parse any sort of API response, whether it's custom REST XML, JSON, Atom, or RSS, is to first take a look at the raw response format and then to try to model a set of&nbsp;Data Transfer Objects (DTOs) which&nbsp;contain the response format elements you want to actually&nbsp;use in your application. Your DTOs just need to be simple POCO objects for this to work, but there are a set of <a href="http://wiki.github.com/johnsheehan/RestSharp/deserialization">POCO-XML Element matching&nbsp;rules</a> you need to observe if you're using RestSharp's default deserializer - <a href="http://wiki.github.com/johnsheehan/RestSharp/deserialization">you can read them here</a>.</p>
+        <p>Here are the classes that I modeled for this RSS format:</p>
+        <pre class="brush: c-sharp;">public class RssFeed
+        {
+        public string Version { get; set; }
+        public RssChannel Channel { get;set; }
+        }
+
+        public class RssChannel
+        {
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string Link { get; set; }
+        public RssItems Item { get; set; }
+        }
+
+        public class RssItems : List&lt;item&gt;{}
+
+        public class item
+        {
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string Link { get; set; }
+        public string Author { get; set; }
+        public string Comments { get; set; }
+        public string PubDate { get; set; }
+        }</pre>
+        <p>This diagram explains how these DTO classes map to the del.icio.us RSS format:</p>
+        <p style="text-align:center;"><a title="del.icio.us restsharp POCO class to XML document mapping by Aaronontheweb, on Flickr" href="http://www.flickr.com/photos/50581866@N06/4701896653/"><img src="http://farm5.static.flickr.com/4062/4701896653_08da0eaeb9.jpg" alt="del.icio.us restsharp POCO class to XML document mapping" width="488" height="286" /></a></p>
+        <blockquote>
+        <p><strong>ProTip: Handling Lists of XML Elements with POCO Classes</strong></p>
+        <p>One thing that's a bit tricky is handling lists of XML elements, such as the <span style="font-family: courier new,courier;">&lt;item&gt;</span> elements in this case. In order for RestSharp to&nbsp;deserialize&nbsp;them, you need&nbsp;create a List&lt;T&gt; object where the name of&nbsp;class&nbsp;T matches the name of the listed element, which is why my class name is <span style="font-family: courier new,courier;">item</span> in this case.</p>
+        </blockquote>
+        <p>Once you have your POCO classes in order, then you need to actually make requests against the del.icio.us feed for a particular user. Here's&nbsp;my code for doing that:</p>
+        <pre class="brush: c-sharp;">public class DeliciousRequest
+        {
+        public const string DeliciousFeedBase = @"http://feeds.delicious.com/v2/rss/";
+
+        private RestSharp.RestClient _client;
+
+        public DeliciousRequest()
+        {
+        this._client = new RestClient
+        {
+        BaseUrl = DeliciousFeedBase
+        };
+        }
+
+        public RssFeed GetBookMarksForUser(string username)
+        {
+        var request = new RestRequest {RequestFormat = DataFormat.Xml, Resource = username};
+        var response = this._client.Execute&lt;RssFeed&gt;(request);
+        return response.Data;
+        }
+
+        }</pre>
+        <p>All RSS feeds for del.icio.us users can be found using http://feeds.delicious.com/v2/rss/{USERNAME}, therefore you can understand why the <span style="font-family: courier new,courier;">RestClient</span>'s BaseURL and the <span style="font-family: courier new,courier;">RestRequest</span>'s Resource arguments are defined as they are. Once you have your <span style="font-family: courier new,courier;">RestRequest</span> defined, you simply call the client's <span style="font-family: courier new,courier;">Execute&lt;T&gt;</span> method where T is the type of your POCO DTO class.</p>
+        <p>And that's it - RestSharp is easy, and I look forward to creating some more examples with it down the road.</p>
+        <p><strong>More RestSharp Examples</strong>:</p>
+        <ul>
+        <li><a href="http://www.stum.de/2009/12/22/using-restsharp-to-consume-restful-web-services/">Using RestSharp to Consume RESTful Web Services</a></li>
+        <li><a href="http://lukencode.com/2010/04/14/google-weather-api-with-restsharp/">Google Weather API with RestSharp</a></li>
+        </ul>
+        <div class="addthis_toolbox addthis_default_style"  style="padding-top:10px" >
+        <a style="padding-right:10px" href="http://www.addthis.com/bookmark.php?v=250&username=aaronontheweb&url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f06%2f14%2fHow-to-Parse-a-Users-Delicious-Feed-with-RestSharp.aspx&title=How+to+Query+a+User's+del.icio.us+Feed+with+RestSharp&description="><img src="http://s7.addthis.com/static/btn/v2/sm-share-en.gif"  alt="Bookmark and Share" style="border:0"/></a>
+        <a  style="padding-right:10px" href="http://www.addthis.com/bookmark.php?v=250&username=aaronontheweb&url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f06%2f14%2fHow-to-Parse-a-Users-Delicious-Feed-with-RestSharp.aspx&title=How+to+Query+a+User's+del.icio.us+Feed+with+RestSharp&description=&s=dotnetkicks"><img  src="http://dotnetkicks.com/Services/Images/KickItImageGenerator.ashx?url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f06%2f14%2fHow-to-Parse-a-Users-Delicious-Feed-with-RestSharp.aspx" border="0" alt="DotnetKicks" /></a>
+        <a style="padding-right:10px" href="http://www.addthis.com/bookmark.php?v=250&username=aaronontheweb&url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f06%2f14%2fHow-to-Parse-a-Users-Delicious-Feed-with-RestSharp.aspx&title=How+to+Query+a+User's+del.icio.us+Feed+with+RestSharp&description=&s=dotnetshoutout"><img style="height:19px" height="19px" src="http://dotnetshoutout.com/image.axd?url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f06%2f14%2fHow-to-Parse-a-Users-Delicious-Feed-with-RestSharp.aspx" border="0" alt="dotnetshoutout" /></a>
+        </div><p style="margin-top:15px;"><em>If you enjoyed this post, remember to <a style="background:none;padding-right:0px;" href="http://www.aaronstannard.com/syndication.axd">subscribe to my RSS feed</a>!</em></p>
+      
+Categories: .NET Del.icio.us 
+Comments: http://www.aaronstannard.com/post/2010/06/14/How-to-Parse-a-Users-Delicious-Feed-with-RestSharp.aspx#comment
+
+feed items[1] = Title: The Myth of the Single-Person Startup
+Published: 6/12/2010 11:36:00 PM
+URL: http://www.aaronstannard.com/post/2010/06/12/The-Myth-of-the-Single-Person-Startup.aspx
+Author: Aaronontheweb
+Id: http://www.aaronstannard.com/post.aspx?id=70ef41af-dda6-4f73-a325-44cf7bbfb9c2
+Content: 
+        <p><a title="Lonely Road by Matt and Kim Rudge, on Flickr" href="http://www.flickr.com/photos/mattandkim/3734982429/"><img style="margin: 0px 0px 10px 10px; display: inline" src="http://farm3.static.flickr.com/2594/3734982429_6bb7844bef.jpg" alt="Lonely Road" width="402" height="268" align="right" /></a></p>
+        <p>During the month of May, 2010 I took an unpaid leave of absence from work for the entire month and set off to launch my own web-based startup company.</p>
+        <p><a title="Lonely Road by Matt and Kim Rudge, on Flickr" href="http://www.flickr.com/photos/mattandkim/3734982429/"></a></p>
+        <p>My objective was to take a month off work, shut myself away in my apartment, spend a month coding up all of the basic plumbing I needed to get the first core part of my service in working order, and profit. Needless to say, <strong>I failed to reach my goals</strong>,&nbsp; but not for any of the typical reasons like poor project planning, lack-of-focus, and so forth. No, I failed because I took the experiences of other entrepreneurs too literally and tried to &ldquo;be my own boss,&rdquo; without appreciating what that really means.</p>
+        <h3>Success doesn't occur in a vaccuum</h3>
+        <p>I grew up with a father who successfully launched his own self-funded business and made it look easy. Naturally, being the 24 year-old who doesn&rsquo;t know any better, I figured it was as easy as having the technical knowledge to engineer my own product, having a good eye&nbsp;for end-user requirements, having a decent business plan, and enough time / resources to actually put something to market.</p>
+        <p>Naturally, when I finally secured the time I needed to begin engineering my product in earnest, I shut myself away, locked out virtually all human contact, and dove head first into my code. After all, that&rsquo;s all what successful single-person startups do, right? &ldquo;Sure,&rdquo; I thought.</p>
+        <p>Twelve days into my project I&nbsp;had to scrap&nbsp;virtually every piece of code I had written &ndash; everything. It was a disaster. I wiped the slate clean and started redesigning and refactoring the entire thing, and I still hadn&rsquo;t said more than a few sentences about it to anybody. Bear in mind that I was living off of my savings, so&nbsp;the time = money&nbsp;factor&nbsp;loomed large over my head.&nbsp;I went back to work on my project, still determined to get something done.</p>
+        <p>With one week to go before I was due back at work, I bought lunch for the Chief Architect from my&nbsp;regular job and had him take a look at some of my UML diagrams. I explained the domain I was working in, what I was trying to do, and what trouble I had run into thus far. In that one hour of speaking with him, I learned things that could have saved me the previous&nbsp;three weeks of 16-hour days, sleepless nights, endless debugging, and lessons-learned-the-hard-way.</p>
+        <blockquote>
+        <p>This is going to seem like a total &ldquo;no shit&rdquo; observation for people who&rsquo;ve been around the block before, but bear with me: though there are many entrepreneurs who successfully start businesses where they are the sole founder and first employee, they never truly do it alone.</p>
+        <p>They use other colleagues as sounding boards for ideas; they run design ideas by people who are familiar with the business or engineering domain; they stay in touch with potential customers and clients all the way through the process; they operate in professional networks; and they do a much better job keeping friends and family in the loop than I did.</p>
+        </blockquote>
+        <p>I never looked at any of these contacts as must-have items before I set off on my own, and I got burned big time for it. I spent a substantial amount of time barking up the wrong trees and architecting solutions for the wrong problems, and all it would have taken to avoid that was some more collaboration and idea-sharing with people who were never going to be partners, employees, investors, et al.</p>
+        <h3>Stay in the loop with your people</h3>
+        <p>Lesson learned: the appeal of locking yourself in a confined space with nothing more than an Internet connection, a stack of programming books, and a mountain of pop tarts is significant if you&rsquo;re young and tired of people telling you what to do.</p>
+        <p>However, isolating yourself from the world while you undertake a startup project is disastrous &ndash; you don&rsquo;t necessarily need partners working with you day-in and day-out on the project, but you absolutely need sounding boards and supportive people you can share ideas and experiences with, because ultimately if you don&rsquo;t get some outside perspective on what you&rsquo;re doing, you&rsquo;ll make myopic decisions and stumble along the way.</p>
+        <p>Get feedback where you can; talk database schema with the DBA in the break room at your day job while he&rsquo;s refilling his coffee; share your ongoing startup problems with family and friends who&rsquo;ve launched businesses before; join online news groups and connect with other people familiar with your problem domain; just stay in contact.</p>
+        <p>Remember this: being independent isn't the same thing as being alone - always keep a network to support you even if their contributions never amount to something more than friendly advice and encouragement.</p>
+        <div class="addthis_toolbox addthis_default_style"  style="padding-top:10px" >
+        <a style="padding-right:10px" href="http://www.addthis.com/bookmark.php?v=250&username=aaronontheweb&url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f06%2f12%2fThe-Myth-of-the-Single-Person-Startup.aspx&title=The+Myth+of+the+Single-Person+Startup&description="><img src="http://s7.addthis.com/static/btn/v2/sm-share-en.gif"  alt="Bookmark and Share" style="border:0"/></a>
+        <a  style="padding-right:10px" href="http://www.addthis.com/bookmark.php?v=250&username=aaronontheweb&url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f06%2f12%2fThe-Myth-of-the-Single-Person-Startup.aspx&title=The+Myth+of+the+Single-Person+Startup&description=&s=dotnetkicks"><img  src="http://dotnetkicks.com/Services/Images/KickItImageGenerator.ashx?url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f06%2f12%2fThe-Myth-of-the-Single-Person-Startup.aspx" border="0" alt="DotnetKicks" /></a>
+        <a style="padding-right:10px" href="http://www.addthis.com/bookmark.php?v=250&username=aaronontheweb&url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f06%2f12%2fThe-Myth-of-the-Single-Person-Startup.aspx&title=The+Myth+of+the+Single-Person+Startup&description=&s=dotnetshoutout"><img style="height:19px" height="19px" src="http://dotnetshoutout.com/image.axd?url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f06%2f12%2fThe-Myth-of-the-Single-Person-Startup.aspx" border="0" alt="dotnetshoutout" /></a>
+        </div><p style="margin-top:15px;"><em>If you enjoyed this post, remember to <a style="background:none;padding-right:0px;" href="http://www.aaronstannard.com/syndication.axd">subscribe to my RSS feed</a>!</em></p>
+      
+Categories: Startup 
+Comments: http://www.aaronstannard.com/post/2010/06/12/The-Myth-of-the-Single-Person-Startup.aspx#comment
+
+feed items[2] = Title: Discussion: How to Use RestSharp / Hammock to Automatically Parse the YouTube Response Format into POCO Objects
+Published: 6/8/2010 10:35:00 PM
+URL: http://www.aaronstannard.com/post/2010/06/08/RestSharp-Hammock-Parse-YouTube.aspx
+Author: Aaronontheweb
+Id: http://www.aaronstannard.com/post.aspx?id=daa79e23-405f-48c8-93f9-f96d3097aa44
+Content: 
+        <p>If you've been <a href="http://twitter.com/MarketingNinja">following me on Twitter</a> over the past couple of weeks, you might have noticed that I've been a little <a href="http://twitter.com/MarketingNinja/status/15154555062">frustrated with the YouTube GData API lately</a>. Simply put: XML makes me sad. Since that frustrated Tweet I've developed a solution using LINQ-to-XML and a bunch of hard-coded namespaces which isn't how I would prefer to do it.</p>
+        <p>I would much rather use the built in object deserialization capabilities in <a href="http://restsharp.org/">RestSharp</a> or <a href="http://hammock.codeplex.com/">HammockREST</a>. I'll be honest - I do not have a damn clue how to use Hammock's built-in deserialization capabilities. I tried tinkering with it on my own to no avail, and there's not much documentation to speak of.</p>
+        <p><a href="http://wiki.github.com/johnsheehan/RestSharp/deserialization">RestSharp has some more detailed documentation on its deserialization capabilities</a>, but it doesn't answer some lingering questions I have. So without further aideu, I'd like to solicit the opinion of the developer community.</p>
+        <pre class="brush: xml;">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+        &lt;feed xmlns="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" xmlns:openSearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:gd="http://schemas.google.com/g/2005" xmlns:yt="http://gdata.youtube.com/schemas/2007" gd:etag="W/&amp;quot;DkMMRn0zeSp7ImA9WxFWE0k.&amp;quot;"&gt;
+        &lt;id&gt;tag:youtube.com,2008:user:smartdraw:uploads&lt;/id&gt;
+        &lt;updated&gt;2010-05-31T22:21:27.381Z&lt;/updated&gt;
+        &lt;category scheme="http://schemas.google.com/g/2005#kind" term="http://gdata.youtube.com/schemas/2007#video" /&gt;
+        &lt;title&gt;Uploads by smartdraw&lt;/title&gt;
+        &lt;logo&gt;http://www.youtube.com/img/pic_youtubelogo_123x63.gif&lt;/logo&gt;
+        &lt;link rel="related" type="application/atom+xml" href="http://gdata.youtube.com/feeds/api/users/smartdraw?v=2" /&gt;
+        &lt;link rel="alternate" type="text/html" href="http://www.youtube.com/profile_videos?user=smartdraw" /&gt;
+        &lt;link rel="http://schemas.google.com/g/2005#feed" type="application/atom+xml" href="http://gdata.youtube.com/feeds/api/users/smartdraw/uploads?v=2" /&gt;
+        &lt;link rel="http://schemas.google.com/g/2005#batch" type="application/atom+xml" href="http://gdata.youtube.com/feeds/api/users/smartdraw/uploads/batch?v=2" /&gt;
+        &lt;link rel="self" type="application/atom+xml" href="http://gdata.youtube.com/feeds/api/users/smartdraw/uploads?start-index=1&amp;amp;max-results=25&amp;amp;v=2" /&gt;
+        &lt;link rel="service" type="application/atomsvc+xml" href="http://gdata.youtube.com/feeds/api/users/smartdraw/uploads?alt=atom-service&amp;amp;v=2" /&gt;
+        &lt;link rel="next" type="application/atom+xml" href="http://gdata.youtube.com/feeds/api/users/smartdraw/uploads?start-index=26&amp;amp;max-results=25&amp;amp;v=2" /&gt;
+        &lt;author&gt;
+        &lt;name&gt;smartdraw&lt;/name&gt;
+        &lt;uri&gt;http://gdata.youtube.com/feeds/api/users/smartdraw&lt;/uri&gt;
+        &lt;/author&gt;
+        &lt;generator version="2.0" uri="http://gdata.youtube.com/"&gt;YouTube data API&lt;/generator&gt;
+        &lt;openSearch:totalResults&gt;30&lt;/openSearch:totalResults&gt;
+        &lt;openSearch:startIndex&gt;1&lt;/openSearch:startIndex&gt;
+        &lt;openSearch:itemsPerPage&gt;25&lt;/openSearch:itemsPerPage&gt;
+        &lt;entry gd:etag="W/&amp;quot;CEIHQn47eCp7ImA9WxFWE0k.&amp;quot;"&gt;
+        &lt;id&gt;tag:youtube.com,2008:video:NJPrllhYZrg&lt;/id&gt;
+        &lt;published&gt;2010-02-10T23:27:38.000Z&lt;/published&gt;
+        &lt;updated&gt;2010-05-31T21:48:53.000Z&lt;/updated&gt;
+        &lt;category scheme="http://schemas.google.com/g/2005#kind" term="http://gdata.youtube.com/schemas/2007#video" /&gt;
+        &lt;category scheme="http://gdata.youtube.com/schemas/2007/categories.cat" term="People" label="People &amp;amp; Blogs" /&gt;
+        &lt;category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="SmartDraw" /&gt;
+        &lt;category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="flowcharts" /&gt;
+        &lt;category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="visuals" /&gt;
+        &lt;category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="communicate" /&gt;
+        &lt;category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="visually" /&gt;
+        &lt;category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="communication" /&gt;
+        &lt;category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="powerpoint" /&gt;
+        &lt;category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="presentations" /&gt;
+        &lt;category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="mind" /&gt;
+        &lt;category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="maps" /&gt;
+        &lt;category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="software" /&gt;
+        &lt;category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Business" /&gt;
+        &lt;category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="graphics" /&gt;
+        &lt;category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="strategic" /&gt;
+        &lt;category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="planning" /&gt;
+        &lt;category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="solutions" /&gt;
+        &lt;category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="tools" /&gt;
+        &lt;title&gt;SmartDraw 2010 Guided Tour&lt;/title&gt;
+        &lt;content type="application/x-shockwave-flash" src="http://www.youtube.com/v/NJPrllhYZrg?f=user_uploads&amp;amp;d=AWaEdOkfU7AZas-hLyE9s8EO88HsQjpE1a8d1GxQnGDm&amp;amp;app=youtube_gdata" /&gt;
+        &lt;link rel="alternate" type="text/html" href="http://www.youtube.com/watch?v=NJPrllhYZrg&amp;amp;feature=youtube_gdata" /&gt;
+        &lt;link rel="http://gdata.youtube.com/schemas/2007#video.responses" type="application/atom+xml" href="http://gdata.youtube.com/feeds/api/videos/NJPrllhYZrg/responses?v=2" /&gt;
+        &lt;link rel="http://gdata.youtube.com/schemas/2007#video.ratings" type="application/atom+xml" href="http://gdata.youtube.com/feeds/api/videos/NJPrllhYZrg/ratings?v=2" /&gt;
+        &lt;link rel="http://gdata.youtube.com/schemas/2007#video.complaints" type="application/atom+xml" href="http://gdata.youtube.com/feeds/api/videos/NJPrllhYZrg/complaints?v=2" /&gt;
+        &lt;link rel="http://gdata.youtube.com/schemas/2007#video.related" type="application/atom+xml" href="http://gdata.youtube.com/feeds/api/videos/NJPrllhYZrg/related?v=2" /&gt;
+        &lt;link rel="http://gdata.youtube.com/schemas/2007#mobile" type="text/html" href="http://m.youtube.com/details?v=NJPrllhYZrg" /&gt;
+        &lt;link rel="self" type="application/atom+xml" href="http://gdata.youtube.com/feeds/api/users/smartdraw/uploads/NJPrllhYZrg?v=2" /&gt;
+        &lt;author&gt;
+        &lt;name&gt;smartdraw&lt;/name&gt;
+        &lt;uri&gt;http://gdata.youtube.com/feeds/api/users/smartdraw&lt;/uri&gt;
+        &lt;/author&gt;
+        &lt;yt:accessControl action="comment" permission="allowed" /&gt;
+        &lt;yt:accessControl action="commentVote" permission="allowed" /&gt;
+        &lt;yt:accessControl action="videoRespond" permission="moderated" /&gt;
+        &lt;yt:accessControl action="rate" permission="allowed" /&gt;
+        &lt;yt:accessControl action="embed" permission="allowed" /&gt;
+        &lt;yt:accessControl action="syndicate" permission="allowed" /&gt;
+        &lt;gd:comments&gt;
+        &lt;gd:feedLink href="http://gdata.youtube.com/feeds/api/videos/NJPrllhYZrg/comments?v=2" countHint="0" /&gt;
+        &lt;/gd:comments&gt;
+        &lt;media:group&gt;
+        &lt;media:credit role="uploader" scheme="urn:youtube"&gt;smartdraw&lt;/media:credit&gt;
+        &lt;media:description type="plain"&gt;Explains the features of SmartDraw, the software that allows you produce any visual, whether it's a flowchart or a floor plan, in a matter of minutes.
+        Download a free trial of SmartDraw here: http://www.smartdraw.com/downloads/?id=343742&lt;/media:description&gt;
+        &lt;media:keywords&gt;SmartDraw, flowcharts, visuals, communicate, visually, communication, powerpoint, presentations, mind, maps, software, Business, graphics, strategic, planning, solutions, tools&lt;/media:keywords&gt;
+        &lt;media:player url="http://www.youtube.com/watch?v=NJPrllhYZrg&amp;amp;feature=youtube_gdata" /&gt;
+        &lt;media:thumbnail url="http://i.ytimg.com/vi/NJPrllhYZrg/default.jpg" height="90" width="120" time="00:03:21" /&gt;
+        &lt;media:thumbnail url="http://i.ytimg.com/vi/NJPrllhYZrg/2.jpg" height="90" width="120" time="00:03:21" /&gt;
+        &lt;media:thumbnail url="http://i.ytimg.com/vi/NJPrllhYZrg/1.jpg" height="90" width="120" time="00:01:40.500" /&gt;
+        &lt;media:thumbnail url="http://i.ytimg.com/vi/NJPrllhYZrg/3.jpg" height="90" width="120" time="00:05:01.500" /&gt;
+        &lt;media:thumbnail url="http://i.ytimg.com/vi/NJPrllhYZrg/hqdefault.jpg" height="360" width="480" /&gt;
+        &lt;media:title type="plain"&gt;SmartDraw 2010 Guided Tour&lt;/media:title&gt;
+        &lt;yt:duration seconds="402" /&gt;
+        &lt;yt:uploaded&gt;2010-02-10T23:27:38.000Z&lt;/yt:uploaded&gt;
+        &lt;yt:videoid&gt;NJPrllhYZrg&lt;/yt:videoid&gt;
+        &lt;/media:group&gt;
+        &lt;gd:rating average="4.4444447" max="5" min="1" numRaters="9" rel="http://schemas.google.com/g/2005#overall" /&gt;
+        &lt;yt:statistics favoriteCount="9" viewCount="16206" /&gt;
+        &lt;yt:rating numDislikes="1" numLikes="8" /&gt;
+        &lt;/entry&gt;
+        &lt;/feed&gt;</pre>
+        <p>Now, here are use cases for how I might want to use this format:</p>
+        <ol>
+        <li>The GData API will only serve a maximum of 50 entries at any given time - one way to paginate through all of the entries in one go is to parse the <span style="font-family: courier new,courier;">link rel="next</span>" field and query that URL until the field no longer exists. Is there a way you can use a POCO class in Hammock or RestSharp to automatically grab this field between queries against the API?</li>
+        <li>Imagine you create a POCO class which contains the YouTube video ID, the author's username, the number of comments on the video, the keywords for the video, the number of views, and the number of the number of favorites. How would you structure this class such that RestSharp or HammockREST can automatically parse it from an ATOM response format like the one above? Bear in mind that these fields come from four of the five different XML namespaces (atom, Media RSS [media], GData [gd], and YouTube [yt]) used in this response format.</li>
+        </ol>
+        <div class="addthis_toolbox addthis_default_style"  style="padding-top:10px" >
+        <a style="padding-right:10px" href="http://www.addthis.com/bookmark.php?v=250&username=aaronontheweb&url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f06%2f08%2fRestSharp-Hammock-Parse-YouTube.aspx&title=Discussion%3a+How+to+Use+RestSharp+%2f+Hammock+to+Automatically+Parse+the+YouTube+Response+Format+into+POCO+Objects&description="><img src="http://s7.addthis.com/static/btn/v2/sm-share-en.gif"  alt="Bookmark and Share" style="border:0"/></a>
+        <a  style="padding-right:10px" href="http://www.addthis.com/bookmark.php?v=250&username=aaronontheweb&url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f06%2f08%2fRestSharp-Hammock-Parse-YouTube.aspx&title=Discussion%3a+How+to+Use+RestSharp+%2f+Hammock+to+Automatically+Parse+the+YouTube+Response+Format+into+POCO+Objects&description=&s=dotnetkicks"><img  src="http://dotnetkicks.com/Services/Images/KickItImageGenerator.ashx?url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f06%2f08%2fRestSharp-Hammock-Parse-YouTube.aspx" border="0" alt="DotnetKicks" /></a>
+        <a style="padding-right:10px" href="http://www.addthis.com/bookmark.php?v=250&username=aaronontheweb&url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f06%2f08%2fRestSharp-Hammock-Parse-YouTube.aspx&title=Discussion%3a+How+to+Use+RestSharp+%2f+Hammock+to+Automatically+Parse+the+YouTube+Response+Format+into+POCO+Objects&description=&s=dotnetshoutout"><img style="height:19px" height="19px" src="http://dotnetshoutout.com/image.axd?url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f06%2f08%2fRestSharp-Hammock-Parse-YouTube.aspx" border="0" alt="dotnetshoutout" /></a>
+        </div><p style="margin-top:15px;"><em>If you enjoyed this post, remember to <a style="background:none;padding-right:0px;" href="http://www.aaronstannard.com/syndication.axd">subscribe to my RSS feed</a>!</em></p>
+      
+Categories: .NET YouTube 
+Comments: http://www.aaronstannard.com/post/2010/06/08/RestSharp-Hammock-Parse-YouTube.aspx#comment
+
+feed items[3] = Title: Two Ways to Randomize IList<T> Objects
+Published: 6/7/2010 5:27:00 PM
+URL: http://www.aaronstannard.com/post/2010/06/07/Two-Ways-to-Randomize-IList-Objects.aspx
+Author: Aaronontheweb
+Id: http://www.aaronstannard.com/post.aspx?id=8196d518-bf57-4ae1-bfd9-b9f841b865e4
+Content: 
+        <p>I recently developed a self-sorted <a href="http://msdn.microsoft.com/en-us/library/5y536ey6.aspx">IList</a> implementation for a project and I needed some automated way to unit test it - so naturally, the best way to automatically test a sorting function is to force it to&nbsp;sort the results of an unsorting function ;). Just for reference, IList is the interface implemented by every sort of List&lt;T&gt; variant in the .NET Collections library, with the notable exception of <a href="http://msdn.microsoft.com/en-us/library/system.collections.sortedlist.aspx">SortedList</a> which is really a misnomer given&nbsp;that it&nbsp;actually implements <a href="http://msdn.microsoft.com/en-us/library/system.collections.idictionary.aspx">IDictionary</a>&nbsp;instead of IList.</p>
+        <p>I was excited at the prospect of developing my own unsorting method, but sadly a quick Bing query revealed a couple of solutions developed by programmers far more diligent than&nbsp;I, and I decided to roll both of their solutions into a pair of generic extension methods which I have tested and built into my solution. Let's take a look at them:</p>
+        <h3>Solution 1 - Randomizing an IList&lt;T&gt; Object Using LINQ Projection</h3>
+        <p>By far the most simple, yet elegant method for <a href="http://www.ookii.org/post/randomizing_a_list_with_linq.aspx">randomizing the contents of an IList object</a> I found was this one developed by <a href="http://www.ookii.org/">Sven Groot</a>, which uses LINQ's OrderBy method to randomize the contents of an <a href="http://msdn.microsoft.com/en-us/library/9eekhta0.aspx">IEnumerable</a> object:</p>
+        <pre class="brush: c-sharp;">public static IEnumerable&lt;T&gt; Randomize&lt;T&gt;(this IEnumerable&lt;T&gt; source)
+        {
+        Random rnd = new Random();
+        return source.OrderBy&lt;T, int&gt;((item) =&gt; rnd.Next());
+        }</pre>
+        <p>In terms of brevity, it doesn't get much better than this. Also, given that I need to ultimately create an IList&lt;T&gt; object out of this randomized collection remember that List&lt;T&gt; has a constructor which accepts an IEnumerable&lt;T&gt; collection as an argument.</p>
+        <h3>Solution 2 - Randomizing an IList&lt;T&gt; Object Using an Index Swap Routine</h3>
+        <p>The more traditional, pre-LINQ solution would be to <a href="http://bytes.com/topic/net/answers/119718-randomize-array-items">randomize the contents of an&nbsp;IList&lt;T&gt; object using a swap routine</a> given that all IList objects have indexers, which is exactly what <a href="http://www.yoda.arachsys.com/csharp/">Jon Skeet</a> did using this solution:</p>
+        <pre class="brush: c-sharp;">Random rng = new Random();
+        for (int i = list.Count - 1; i &gt; 0; i--)
+        {
+        int swapIndex = rng.Next(i + 1);
+        if (swapIndex != i)
+        {
+        //Changed this from "object" to "T" in order to support generics.
+        object tmp = list[swapIndex];
+        list[swapIndex] = list[i];
+        list[i] = tmp;
+        }
+        }</pre>
+        <p>If you have time, make sure you read <a href="http://bytes.com/topic/net/answers/119718-randomize-array-items">Jon's explanation of&nbsp;how the&nbsp;algorithm works</a> (it's pretty cool imho.) I went ahead and wrapped this code into an extension method just like Sven's LINQ solution, and here's what that looks like:</p>
+        <pre class="brush: c-sharp;">public static IEnumerable&lt;T&gt; RandomizeWithSwaps&lt;T&gt;(this IList&lt;T&gt; list)
+        {
+        Random rng = new Random();
+        for (int i = list.Count - 1; i &gt; 0; i--)
+        {
+        int swapIndex = rng.Next(i + 1);
+        if (swapIndex != i)
+        {
+        //Changed this from "object" to "T" in order to support generics.
+        T tmp = list[swapIndex];
+        list[swapIndex] = list[i];
+        list[i] = tmp;
+        }
+        }
+
+        return list;
+        }</pre>
+        <p>One thing worth noting is that this extension method will only work with IList types - IEnumerable doesn't have any support for indexers, thus this extension method is somewhat wonky. Given that, I went with&nbsp;using&nbsp;the LINQ solution in my unit testing code.</p>
+        <div class="addthis_toolbox addthis_default_style"  style="padding-top:10px" >
+        <a style="padding-right:10px" href="http://www.addthis.com/bookmark.php?v=250&username=aaronontheweb&url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f06%2f07%2fTwo-Ways-to-Randomize-IList-Objects.aspx&title=Two+Ways+to+Randomize+IList%3cT%3e+Objects&description=Explains+how+to+randomize+the+contents+of+any+IList%3cT%3e+collection+using+Linq+or+an+index+swap+routine."><img src="http://s7.addthis.com/static/btn/v2/sm-share-en.gif"  alt="Bookmark and Share" style="border:0"/></a>
+        <a  style="padding-right:10px" href="http://www.addthis.com/bookmark.php?v=250&username=aaronontheweb&url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f06%2f07%2fTwo-Ways-to-Randomize-IList-Objects.aspx&title=Two+Ways+to+Randomize+IList%3cT%3e+Objects&description=Explains+how+to+randomize+the+contents+of+any+IList%3cT%3e+collection+using+Linq+or+an+index+swap+routine.&s=dotnetkicks"><img  src="http://dotnetkicks.com/Services/Images/KickItImageGenerator.ashx?url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f06%2f07%2fTwo-Ways-to-Randomize-IList-Objects.aspx" border="0" alt="DotnetKicks" /></a>
+        <a style="padding-right:10px" href="http://www.addthis.com/bookmark.php?v=250&username=aaronontheweb&url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f06%2f07%2fTwo-Ways-to-Randomize-IList-Objects.aspx&title=Two+Ways+to+Randomize+IList%3cT%3e+Objects&description=Explains+how+to+randomize+the+contents+of+any+IList%3cT%3e+collection+using+Linq+or+an+index+swap+routine.&s=dotnetshoutout"><img style="height:19px" height="19px" src="http://dotnetshoutout.com/image.axd?url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f06%2f07%2fTwo-Ways-to-Randomize-IList-Objects.aspx" border="0" alt="dotnetshoutout" /></a>
+        </div><p style="margin-top:15px;"><em>If you enjoyed this post, remember to <a style="background:none;padding-right:0px;" href="http://www.aaronstannard.com/syndication.axd">subscribe to my RSS feed</a>!</em></p>
+      
+Categories: .NET 
+Comments: http://www.aaronstannard.com/post/2010/06/07/Two-Ways-to-Randomize-IList-Objects.aspx#comment
+
+feed items[4] = Title: Frustration Central: Parsing the DateTime Values from the SlideShare REST API
+Published: 6/2/2010 2:49:00 PM
+URL: http://www.aaronstannard.com/post/2010/06/02/Parsing-the-DateTime-Values-from-the-SlideShare-REST-API.aspx
+Author: Aaronontheweb
+Id: http://www.aaronstannard.com/post.aspx?id=338d52fa-8aae-4869-80e0-7cabe0b0e467
+Content: 
+        <p>I feel a little bad about posting this given that Jon Boutelle, the CTO of <a href="http://www.slideshare.net/">SlideShare</a>, already <a href="http://groups.google.com/group/slideshare-developers/browse_thread/thread/4d7bd64df132c15e">admitted that this portion of the SlideShare 2.0 REST API sucks and that they're going to fix it eventually</a>, but given that I'm in the middle of rewriting my original SlideShare Presentation XML deserializer I wanted to post my current solution to this problem and solicit the opinion of the .NET community in order to find a more elegant solution, if one exists.</p>
+        <p>Here's the problem - if you're trying to query any number of presentation objects from SlideShare, you're inevitably going to make a call to <span style="font-family: courier new,courier;"><a href="http://www.slideshare.net/developers/documentation">get_slideshow</a></span> or to some method which depends on it. That's an unavoidable&nbsp;fact of life when you're dealing with the SlideShare API. For the most part, the SlideShare API's response format is intuitive and intelligible - here's an example response using actual data:</p>
+        <pre class="brush: xml;">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+        &lt;Slideshow&gt;
+        &lt;ID&gt;3997766&lt;/ID&gt;
+        &lt;Title&gt;Startup Metrics 4 Pirates (Montreal, May 2010)&lt;/Title&gt;
+        &lt;Description&gt;slides from my talk at Startup Camp Montreal 6 (May, 2010)&lt;/Description&gt;
+        &lt;Status&gt;2&lt;/Status&gt;
+        &lt;Username&gt;dmc500hats&lt;/Username&gt;
+        &lt;URL&gt;[removed for fomatting reasons]&lt;/URL&gt;
+        &lt;ThumbnailURL&gt;[removed for fomatting reasons]&lt;/ThumbnailURL&gt;
+        &lt;ThumbnailSmallURL&gt;[removed for fomatting reasons]&lt;/ThumbnailSmallURL&gt;
+        &lt;Embed&gt;
+        [removed for fomatting reasons]
+        &lt;/Embed&gt;
+        &lt;Created&gt;Thu May 06 14:10:46 -0500 2010&lt;/Created&gt;
+        &lt;Language&gt;en&lt;/Language&gt;
+        &lt;Format&gt;ppt&lt;/Format&gt;
+        &lt;Download&gt;1&lt;/Download&gt;
+        &lt;Tags&gt;
+        &lt;Tag Count="1" Owner="1"&gt;startup&lt;/Tag&gt;
+        &lt;Tag Count="1" Owner="1"&gt;scmtl&lt;/Tag&gt;
+        &lt;Tag Count="1" Owner="1"&gt;leanstartup&lt;/Tag&gt;
+        &lt;Tag Count="1" Owner="1"&gt;acquisition&lt;/Tag&gt;
+        &lt;Tag Count="1" Owner="1"&gt;activation&lt;/Tag&gt;
+        &lt;Tag Count="1" Owner="1"&gt;poutin&lt;/Tag&gt;
+        &lt;Tag Count="1" Owner="1"&gt;pirate&lt;/Tag&gt;
+        &lt;Tag Count="1" Owner="1"&gt;metrics&lt;/Tag&gt;
+        &lt;Tag Count="1" Owner="1"&gt;referral&lt;/Tag&gt;
+        &lt;Tag Count="1" Owner="1"&gt;aarrr&lt;/Tag&gt;
+        &lt;Tag Count="1" Owner="1"&gt;retention&lt;/Tag&gt;
+        &lt;Tag Count="1" Owner="1"&gt;revenue&lt;/Tag&gt;
+        &lt;/Tags&gt;
+        &lt;NumDownloads&gt;18&lt;/NumDownloads&gt;
+        &lt;NumViews&gt;1002&lt;/NumViews&gt;
+        &lt;NumComments&gt;0&lt;/NumComments&gt;
+        &lt;NumFavorites&gt;3&lt;/NumFavorites&gt;
+        &lt;NumSlides&gt;67&lt;/NumSlides&gt;
+        &lt;RelatedSlideshows&gt;
+        &lt;RelatedSlideshowID rank="6"&gt;89026&lt;/RelatedSlideshowID&gt;
+        &lt;RelatedSlideshowID rank="4"&gt;602558&lt;/RelatedSlideshowID&gt;
+        &lt;RelatedSlideshowID rank="3"&gt;629696&lt;/RelatedSlideshowID&gt;
+        &lt;RelatedSlideshowID rank="5"&gt;629833&lt;/RelatedSlideshowID&gt;
+        &lt;RelatedSlideshowID rank="9"&gt;1064559&lt;/RelatedSlideshowID&gt;
+        &lt;RelatedSlideshowID rank="10"&gt;1566287&lt;/RelatedSlideshowID&gt;
+        &lt;RelatedSlideshowID rank="1"&gt;2992302&lt;/RelatedSlideshowID&gt;
+        &lt;RelatedSlideshowID rank="2"&gt;3017886&lt;/RelatedSlideshowID&gt;
+        &lt;RelatedSlideshowID rank="8"&gt;3387416&lt;/RelatedSlideshowID&gt;
+        &lt;RelatedSlideshowID rank="7"&gt;3951684&lt;/RelatedSlideshowID&gt;
+        &lt;/RelatedSlideshows&gt;
+        &lt;PrivacyLevel&gt;0&lt;/PrivacyLevel&gt;
+        &lt;SecretURL&gt;0&lt;/SecretURL&gt;
+        &lt;AllowEmbed&gt;0&lt;/AllowEmbed&gt;
+        &lt;ShareWithContacts&gt;0&lt;/ShareWithContacts&gt;
+        &lt;/Slideshow&gt;</pre>
+        <p>Intuitive, no? However, let's take a closer look at the &lt;Created&gt; field, which contains the date that this SlideShare presentation was originally uploaded:</p>
+        <pre class="brush: xml;">&lt;Created&gt;Thu May 06 14:10:46 -0500 2010&lt;/Created&gt;</pre>
+        <p>What, pray tell, is this? It appears that SlideShare REST 2.0's date format consists of&nbsp;the following elements&nbsp;in left to right order:</p>
+        <pre class="brush: xml;">&lt;Created&gt;Day of week name, Month name, Day of month, Hours:Minutes:Seconds, UTC offset, Year&lt;/Created&gt;</pre>
+        <p>Unfortunately, this format is not one of the many supported <a href="http://msdn.microsoft.com/en-us/library/az4se3k1.aspx">Standard Date and Time Formats in .NET</a>&nbsp;nor is it a <a href="http://en.wikipedia.org/wiki/Unix_time">UNIX time&nbsp;format</a>, so <a href="http://msdn.microsoft.com/en-us/library/kc8s65zs.aspx">DateTime.Parse</a> and the other built-in DateTime parsing variants in .NET will not be able to parse this DateTime data from the SlideShare API. Thus, I created my own admittedly ugly solution to this problem, which I will reveal below, every ugly piece by ugly piece.</p>
+        <p>Despite how ugly this solution is, it's been tested pretty thoroughly and works (as far as I know.) The only thing it does not do, currently, is use the UTC offset in any way, shape or form, which is a modification I am currently working on in my new version of the SlideShare presentation deserializer which uses these functions.</p>
+        <p>The first issue is that there's no numeric value for the month - you have to map a three-letter code to its correspodning month, i.e. "Mar" = 3, "May" = 5, and so forth. Here's the function I made for that very purpose:</p>
+        <pre class="brush: c-sharp;">public static int GetMonth(string slideShareDatetime)
+        {
+        try
+        {   //Skip past the three-letter code for the day of the week and the space in between.
+        string MonthStr = slideShareDatetime.Substring(4, 3).ToLower();
+        int returnValue = 1;
+        switch (MonthStr)
+        {
+        case "jan":
+        returnValue = 1;
+        break;
+        case "feb":
+        returnValue = 2;
+        break;
+        case "mar":
+        returnValue = 3;
+        break;
+        case "apr":
+        returnValue = 4;
+        break;
+        case "may":
+        returnValue = 5;
+        break;
+        case "jun":
+        returnValue = 6;
+        break;
+        case "jul":
+        returnValue = 7;
+        break;
+        case "aug":
+        returnValue = 8;
+        break;
+        case "sep":
+        returnValue = 9;
+        break;
+        case "oct":
+        returnValue = 10;
+        break;
+        case "nov":
+        returnValue = 11;
+        break;
+        case "dec":
+        returnValue = 12;
+        break;
+        default:
+        throw new InvalidOperationException("Unable to recognize month" + MonthStr + " in SlideShareDate.");
+        }
+        return returnValue;
+        }
+        catch (Exception ex)
+        {
+        logger.ErrorException("Unable to parse month from SlideShare presentation.", ex);
+        throw;
+        }
+        }</pre>
+        <p>The next thing we have to do is extract the numeric day of the week, which I do using the function below:</p>
+        <pre class="brush: c-sharp;">public static int GetDay(string slideShareDatetime)
+        {
+        string strRegexPattern = @"((\d|\d{2})\b){1}";
+        Regex r = new Regex(strRegexPattern);
+        string matchingDay = r.Match(slideShareDatetime).ToString();
+        return Convert.ToInt32(matchingDay);
+        }</pre>
+        <p>I <a href="http://www.aaronstannard.com/post/2010/05/17/How-to-Test-Regular-Expressions-in-NET-without-Giving-Yourself-Migraines.aspx">tested several regular expressions numerous times</a> before I&nbsp;settled on&nbsp;this one, which I liked for its simplicity - all it does is look for the first instance of a one or two numeric character word in a given string.</p>
+        <p>Next, we have to extract the year from the string, which I do using the function below:</p>
+        <pre class="brush: c-sharp;">public static int GetYear(string slideShareDatetime)
+        {
+        string YearStr = slideShareDatetime.Substring(slideShareDatetime.Length - 4, 4);
+        return Convert.ToInt32(YearStr);
+        }</pre>
+        <p>All this function does is extract the last four characters from the string (the date, in this case) and converts it into an integer. I suppose this function will break sometime around the year 10,000, or whenever SlideShare adds some whitespace to the end of their XML response for the Created field, whichever comes first.</p>
+        <p>Lastly we have to extract the hour:minutes:seconds values into some sort of intelligible format, so thus I present you with yet another&nbsp;cringe-worthy function:</p>
+        <pre class="brush: c-sharp;">public static Dictionary GetTime(string slideShareDatetime)
+        {
+        try
+        {
+        Dictionary returnValue = null;
+
+        string strRegexPattern = @"((\d{2}:\d{2}:\d{2})\b)";
+        Regex r = new Regex(strRegexPattern);
+
+        string matchingDay = r.Match(slideShareDatetime).ToString();
+        if (matchingDay == String.Empty)
+        throw new InvalidOperationException("Unable to parse time of day from SlideShareDate:" + slideShareDatetime);
+
+        string[] TimeParts = matchingDay.Split(':');
+        if (TimeParts.Length &lt; 3)
+        throw new InvalidOperationException("Invalid date/time parsed from SlideShareDate:" + slideShareDatetime);
+
+        returnValue = new Dictionary();
+        returnValue.Add("hours", Convert.ToInt32(TimeParts[0]));
+        returnValue.Add("minutes", Convert.ToInt32(TimeParts[1]));
+        returnValue.Add("seconds", Convert.ToInt32(TimeParts[2]));
+
+        return returnValue;
+        }
+        catch (Exception ex)
+        {
+        logger.ErrorException("Failed to parse time from presentation.", ex);
+        throw;
+        }
+        }</pre>
+        <p>And then we put it all together in one, big, happy function:</p>
+        <pre class="brush: c-sharp;">public static DateTime ParseSlideShareDateTime(string slideShareDatetime)
+        {
+        int Month = GetMonth(slideShareDatetime);
+        int Year = GetYear(slideShareDatetime);
+        int Day = GetDay(slideShareDatetime);
+        Dictionary Time = GetTime(slideShareDatetime);
+        DateTime properDate = new DateTime(Year, Month, Day, Time["hours"], Time["minutes"], Time["seconds"]);
+        return properDate;
+        }</pre>
+        <p>Yeah. So - can anybody think of a much more, ahem, "robust" way of parsing the Created field from the SlideShare API? I would love to hear it! :)</p>
+        <div class="addthis_toolbox addthis_default_style"  style="padding-top:10px" >
+        <a style="padding-right:10px" href="http://www.addthis.com/bookmark.php?v=250&username=aaronontheweb&url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f06%2f02%2fParsing-the-DateTime-Values-from-the-SlideShare-REST-API.aspx&title=Frustration+Central%3a+Parsing+the+DateTime+Values+from+the+SlideShare+REST+API&description="><img src="http://s7.addthis.com/static/btn/v2/sm-share-en.gif"  alt="Bookmark and Share" style="border:0"/></a>
+        <a  style="padding-right:10px" href="http://www.addthis.com/bookmark.php?v=250&username=aaronontheweb&url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f06%2f02%2fParsing-the-DateTime-Values-from-the-SlideShare-REST-API.aspx&title=Frustration+Central%3a+Parsing+the+DateTime+Values+from+the+SlideShare+REST+API&description=&s=dotnetkicks"><img  src="http://dotnetkicks.com/Services/Images/KickItImageGenerator.ashx?url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f06%2f02%2fParsing-the-DateTime-Values-from-the-SlideShare-REST-API.aspx" border="0" alt="DotnetKicks" /></a>
+        <a style="padding-right:10px" href="http://www.addthis.com/bookmark.php?v=250&username=aaronontheweb&url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f06%2f02%2fParsing-the-DateTime-Values-from-the-SlideShare-REST-API.aspx&title=Frustration+Central%3a+Parsing+the+DateTime+Values+from+the+SlideShare+REST+API&description=&s=dotnetshoutout"><img style="height:19px" height="19px" src="http://dotnetshoutout.com/image.axd?url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f06%2f02%2fParsing-the-DateTime-Values-from-the-SlideShare-REST-API.aspx" border="0" alt="dotnetshoutout" /></a>
+        </div><p style="margin-top:15px;"><em>If you enjoyed this post, remember to <a style="background:none;padding-right:0px;" href="http://www.aaronstannard.com/syndication.axd">subscribe to my RSS feed</a>!</em></p>
+      
+Categories: .NET SlideShare 
+Comments: http://www.aaronstannard.com/post/2010/06/02/Parsing-the-DateTime-Values-from-the-SlideShare-REST-API.aspx#comment
+
+feed items[5] = Title: The State of Open Web APIs
+Published: 5/28/2010 1:52:00 PM
+URL: http://www.aaronstannard.com/post/2010/05/28/The-State-of-Open-Web-APIs.aspx
+Author: Aaronontheweb
+Id: http://www.aaronstannard.com/post.aspx?id=74799fe5-32ef-495f-aa94-8f52463c1612
+Content: 
+        <p>I wanted to repost a presentation that I saw on Twitter yesterday which highlights some interesting trends in the state of open web APIs across the board:</p>
+        <div id="__ss_4322128" style="text-align:center;"><strong style="display:block;margin:12px 0 4px"><a title="Open APIs: State of the Market, May 2010" href="http://www.slideshare.net/jmusser/pw-glue-conmay2010">Open APIs: State of the Market, May 2010</a></strong><embed type="application/x-shockwave-flash" width="425" height="355" src="http://static.slidesharecdn.com/swf/ssplayer2.swf?doc=pwglueconmay2010-100526172639-phpapp02&amp;stripped_title=pw-glue-conmay2010" allowscriptaccess="always" allowfullscreen="true" name="__sse4322128"></embed>
+        <div style="padding:5px 0 12px">View more <a href="http://www.slideshare.net/">presentations</a> from <a href="http://www.slideshare.net/jmusser">jmusser</a>.</div>
+        </div>
+        <p>Here are some cliff notes:</p>
+        <ul>
+        <li>SOAP is losing marketshare to REST or SOAP's share is simply being dilluted by the avalanche of new REST APIs&nbsp;-&nbsp;the charts don't make it clear;</li>
+        <li>JSON is on the rise;</li>
+        <li>OAuth is surging and is now adopted by 80+ services; and</li>
+        <li>APIs are maturing in their practices.</li>
+        </ul>
+        <div class="addthis_toolbox addthis_default_style"  style="padding-top:10px" >
+        <a style="padding-right:10px" href="http://www.addthis.com/bookmark.php?v=250&username=aaronontheweb&url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f05%2f28%2fThe-State-of-Open-Web-APIs.aspx&title=The+State+of+Open+Web+APIs&description="><img src="http://s7.addthis.com/static/btn/v2/sm-share-en.gif"  alt="Bookmark and Share" style="border:0"/></a>
+        <a  style="padding-right:10px" href="http://www.addthis.com/bookmark.php?v=250&username=aaronontheweb&url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f05%2f28%2fThe-State-of-Open-Web-APIs.aspx&title=The+State+of+Open+Web+APIs&description=&s=dotnetkicks"><img  src="http://dotnetkicks.com/Services/Images/KickItImageGenerator.ashx?url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f05%2f28%2fThe-State-of-Open-Web-APIs.aspx" border="0" alt="DotnetKicks" /></a>
+        <a style="padding-right:10px" href="http://www.addthis.com/bookmark.php?v=250&username=aaronontheweb&url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f05%2f28%2fThe-State-of-Open-Web-APIs.aspx&title=The+State+of+Open+Web+APIs&description=&s=dotnetshoutout"><img style="height:19px" height="19px" src="http://dotnetshoutout.com/image.axd?url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f05%2f28%2fThe-State-of-Open-Web-APIs.aspx" border="0" alt="dotnetshoutout" /></a>
+        </div><p style="margin-top:15px;"><em>If you enjoyed this post, remember to <a style="background:none;padding-right:0px;" href="http://www.aaronstannard.com/syndication.axd">subscribe to my RSS feed</a>!</em></p>
+      
+Categories: General 
+Comments: http://www.aaronstannard.com/post/2010/05/28/The-State-of-Open-Web-APIs.aspx#comment
+
+feed items[6] = Title: Making Basic Requests Against the SlideShare API Using HammockREST
+Published: 5/27/2010 8:49:00 PM
+URL: http://www.aaronstannard.com/post/2010/05/27/Making-Basic-Requests-Against-the-SlideShare-API-Using-HammockREST.aspx
+Author: Aaronontheweb
+Id: http://www.aaronstannard.com/post.aspx?id=4d98524f-3e38-4f70-a800-e5d2dd7b4f9d
+Content: 
+        <p>The project I'm currently working on involves numerous REST APIs from a multitude of very different services. In my initial prototype, which I've since scrapped, I went with trying to use a local wrapper for each REST API incorporated into my project, meaning I used the <a href="http://code.google.com/apis/youtube/2.0/developers_guide_dotnet.html">GData library for handling YouTube</a>, <a href="http://flickrnet.codeplex.com/">FlickrNET for Flickr</a>, etc...</p>
+        <p>As you can imagine, having N libraries for N different REST APIs in my service snowballed into a maintainability nightmare. In my new redesign I decided to use a generic REST wrapper in .NET, and as it so happens there are two full API-agnostic REST libraries in .NET: <a href="http://hammock.codeplex.com/">HammockREST</a> and <a href="http://restsharp.org/">RestSharp</a>. If there's one thing you can fault both of these libraries for, it's lack of documentation - they're both new comers to the .NET open source community, so I'm going to contribute some documentation for Hammock and RestSharp, starting with the SlideShare API for Hammock.</p>
+        <p>If you take a look at <a href="http://hammock.codeplex.com/documentation">HammockREST's documentation</a>, you can see how to structure a generic REST request for the Twitter API. Below is my full function for calling the <span style="font-family: courier new,courier;"><a href="http://www.slideshare.net/developers/documentation">get_slideshows_by_user</a></span> from the SlideShare API using HammockREST; we'll start from the code and work backwards to explain what's going on underneath the hood.</p>
+        <pre class="brush: c-sharp;">public static string Query(string username)
+        {
+        RestClient client = new RestClient
+        {
+        Authority = "http://www.slideshare.net/api/",
+        VersionPath = "2"
+        };
+        client.AddHeader("User-Agent", "Hammock");
+
+        RestRequest request = new RestRequest
+        {
+        Path = "get_slideshows_by_user"
+        };
+
+        string timestamp = QueryHelper.GetCurrentTimestamp();
+
+        request.AddParameter("api_key", Constants.SlideShareAPIKey);
+        request.AddParameter("ts", timestamp);
+        request.AddParameter("hash", QueryHelper.CalculateSHA1(Constants.SlideShareSharedSecret + timestamp, Encoding.UTF8));
+        request.AddParameter("username_for", username);
+
+        RestResponse response = client.Request(request);
+
+        return response.Content;
+        }</pre>
+        <p>Bear in mind that this is just meant to be simple example code to illustrate how HammockREST works with the SlideShareAPI, not something you'd stick in a production environment.</p>
+        <p>If you're unfamiliar with the SlideShare API remember that every request, even unauthenticated ones, requires the following three parameters:</p>
+        <ol>
+        <li>"<strong>api_key</strong>" - your SlideShareAPI developer key;</li>
+        <li>"<strong>ts</strong>" - a UNIX-style timestamp; and</li>
+        <li>"<strong>hash</strong>" - a hash of your SlideShareAPI developer shared secret plus the UNIX-style timestamp using SHA1. The hash must be in the order of <span style="font-family: courier new,courier;">secret + timestamp</span>.</li>
+        </ol>
+        <p>Given that I'm lazy, I&nbsp;borrowed the timestamp and SHA1 function&nbsp;<a href="http://www.frederikvig.com/2009/10/slideshare-net-api-wrapper/">Frederik Vig's original SlideShareNET wrapper</a>. I'll post the source for both of those at the bottom of this post.</p>
+        <p>With that out of the way, let's look at the different HammockREST components in this code snippet and understand how they work:</p>
+        <pre class="brush: c-sharp;">RestClient client = new RestClient
+        {
+        Authority = "http://www.slideshare.net/api/",
+        VersionPath = "2"
+        };</pre>
+        <p>This code defines a new <span style="font-family: courier new,courier;">Hammock.RestClient</span> object, which specifies the general target for all subsequent API requests. Recall that the&nbsp;base URI&nbsp;for making requests against the&nbsp;SlideShare API is, as of writing this,&nbsp;http://www.slideshare.net/api/2/. In this source code I've expressed that as a combination of two properties:</p>
+        <ul>
+        <li>"<strong>Authority</strong>" - which is set to the root URI for all requests (http://www.slideshare.net/api/.)</li>
+        <li>"<strong>VersionPath</strong>" - which in this case is version #2.</li>
+        </ul>
+        <p>Whenever I execute a <span style="font-family: courier new,courier;">Hammock.RestRequest</span> object using this <span style="font-family: courier new,courier;">Hammock.RestClient</span> instance, all of those <span style="font-family: courier new,courier;">Requests</span> will be executed against this URI: http://www.slideshare.net/api/2/. I could have just as easily accomplished this with the following code:</p>
+        <pre class="brush: c-sharp;">RestClient client = new RestClient
+        {
+        Authority = "http://www.slideshare.net/api/2/"
+        };</pre>
+        <p>The point is that the <strong>VersionPath</strong>&nbsp;property is optional - you can just specify the full base URL in the <strong>Authority</strong> property&nbsp;if you'd prefer to do it that way.</p>
+        <p>Let's take a look at the <span style="font-family: courier new,courier;">Hammock.RestClient</span> instance:</p>
+        <pre class="brush: c-sharp;">RestRequest request = new RestRequest
+        {
+        Path = "get_slideshows_by_user"
+        };</pre>
+        <p>The way Hammock (and RestSharp, as you'll see) construct the URLs for REST requests is the following formula:</p>
+        <p style="padding-left: 30px;">Request URL = {authority[/versionpath]}/{path}</p>
+        <p>Each individual <span style="font-family: courier new,courier;">RestRequest</span> object is meant to map to a specific REST method call, so in this instance I'm trying to call the <span style="font-family: courier new,courier;">get_slideshows_by_user</span> method from the SlideShare API. The code I've shown you thus far accomplishes that effectively, and in sticking with this API/method metaphor, we need to supply our REST API method with some arguments:</p>
+        <pre class="brush: c-sharp;">request.AddParameter("api_key", Constants.SlideShareAPIKey);
+        request.AddParameter("ts", timestamp);
+        request.AddParameter("hash", QueryHelper.CalculateSHA1(Constants.SlideShareSharedSecret + timestamp, Encoding.UTF8));
+        request.AddParameter("username_for", username);</pre>
+        <p>This code is straight-forward enough - I add my three required parameters for any SlideShare request, and then I&nbsp;added parameter required specifically for <span style="font-family: courier new,courier;">get_slideshows_by_user</span>, <strong>username_for</strong>, which specifies the SlideShare user whose presentations we want to retrieve via this API call.</p>
+        <p>Finally, we use the client to actually complete the REST API request:</p>
+        <pre class="brush: c-sharp;">RestResponse response = client.Request(request);</pre>
+        <p>This returns a <span style="font-family: courier new,courier;">Hammock.RestResponse</span> object, which is a container that includes data about the status of the request (i.e. if you ran into a HTTP error, other errors, etc...) and the API's response in string format.</p>
+        <p>That's the long and the short of it - in subsequent examples I'll show you how to automatically deserialize XML content into&nbsp;business objects&nbsp;using HammockREST and I'll show you how to do all of this using RestSharp too.</p>
+        <p>As promised, here's the functions (originally developed by <a href="http://www.frederikvig.com/">Frederik Vig</a>) which I used for generating the&nbsp;timestamps and hashes:</p>
+        <pre class="brush: c-sharp;">public static string GetCurrentTimestamp()
+        {
+        return Convert.ToInt32(Math.Floor((DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds)).ToString();
+        }</pre>
+        <pre class="brush: c-sharp;">using System.Security.Cryptography;
+
+        public static string CalculateSHA1(string text, Encoding enc)
+        {
+        byte[] buffer = enc.GetBytes(text);
+        var cryptoTransformSHA1 = new SHA1CryptoServiceProvider();
+
+        return BitConverter.ToString(cryptoTransformSHA1.ComputeHash(buffer)).Replace("-", "").ToLower();
+        }</pre>
+        <div class="addthis_toolbox addthis_default_style"  style="padding-top:10px" >
+        <a style="padding-right:10px" href="http://www.addthis.com/bookmark.php?v=250&username=aaronontheweb&url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f05%2f27%2fMaking-Basic-Requests-Against-the-SlideShare-API-Using-HammockREST.aspx&title=Making+Basic+Requests+Against+the+SlideShare+API+Using+HammockREST&description="><img src="http://s7.addthis.com/static/btn/v2/sm-share-en.gif"  alt="Bookmark and Share" style="border:0"/></a>
+        <a  style="padding-right:10px" href="http://www.addthis.com/bookmark.php?v=250&username=aaronontheweb&url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f05%2f27%2fMaking-Basic-Requests-Against-the-SlideShare-API-Using-HammockREST.aspx&title=Making+Basic+Requests+Against+the+SlideShare+API+Using+HammockREST&description=&s=dotnetkicks"><img  src="http://dotnetkicks.com/Services/Images/KickItImageGenerator.ashx?url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f05%2f27%2fMaking-Basic-Requests-Against-the-SlideShare-API-Using-HammockREST.aspx" border="0" alt="DotnetKicks" /></a>
+        <a style="padding-right:10px" href="http://www.addthis.com/bookmark.php?v=250&username=aaronontheweb&url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f05%2f27%2fMaking-Basic-Requests-Against-the-SlideShare-API-Using-HammockREST.aspx&title=Making+Basic+Requests+Against+the+SlideShare+API+Using+HammockREST&description=&s=dotnetshoutout"><img style="height:19px" height="19px" src="http://dotnetshoutout.com/image.axd?url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f05%2f27%2fMaking-Basic-Requests-Against-the-SlideShare-API-Using-HammockREST.aspx" border="0" alt="dotnetshoutout" /></a>
+        </div><p style="margin-top:15px;"><em>If you enjoyed this post, remember to <a style="background:none;padding-right:0px;" href="http://www.aaronstannard.com/syndication.axd">subscribe to my RSS feed</a>!</em></p>
+      
+Categories: SlideShare 
+Comments: http://www.aaronstannard.com/post/2010/05/27/Making-Basic-Requests-Against-the-SlideShare-API-Using-HammockREST.aspx#comment
+
+feed items[7] = Title: How to Use the Microsoft Enterprise Library Validation Application Block, Part 1
+Published: 5/24/2010 10:25:00 AM
+URL: http://www.aaronstannard.com/post/2010/05/24/Enterprise-Library-Validation-Block-Part-1.aspx
+Author: Aaronontheweb
+Id: http://www.aaronstannard.com/post.aspx?id=d8df8172-5b36-40c2-a041-06562d7c5ba2
+Content: 
+        <p>All user input is evil, and you know it. Since the inception of .NET, ASP.NET developers have had access to the <a href="http://www.asp.net/general/videos/how-do-i-use-validation-controls-in-aspnet">ASP.NET Validators Control Library</a>, which made the previously tedious process of validating form input simple and in many instances, trivial. <a href="http://entlib.codeplex.com/">Microsoft's Enterprise Library</a>&nbsp;makes this familiar ASP.NET functionality available&nbsp;at the&nbsp;object level in your applications via the <a href="http://msdn.microsoft.com/en-us/library/ff664356(v=PandP.50).aspx">Validation Application Block</a>, which I've been using throughout some of my new projects.</p>
+        <p>It can take a while to get familiar with the Validation Application Block, so my goal here is to show you how to quickly get started with it using <a title=".NET Attributes" href="http://www.codeproject.com/KB/cs/dotnetattributes.aspx#whatareattributes">attribute</a>-based validation, which in my opinion is the simplest way to implement validation. By the time you're doing reading this you'll know how to use built-in validators such as the RangeValidator, RegexValidator, DateTimeRangeValidator, and so forth.</p>
+        <h3>Introduction to the Validation Application Block Built-in Validators</h3>
+        <p>What can the Validation Application Block do, exactly? Well, here's a list of the validators that are built-in to the Validation Application Block:</p>
+        <ul>
+        <li>The <strong>NotNullValidator</strong> which requires an instantiated data member.</li>
+        <li>The <strong>RangeValidator</strong> and the <strong>DateTimeRangeValidator</strong>, which check to see that a data member's value falls within a specified set of boundary conditions.</li>
+        <li>A slew of validators for testing strings:
+        <ul>
+        <li>The <strong>StringLengthValidator</strong> for testing that a string's length falls within a specified set of boundary conditions.</li>
+        <li>The <strong>RegexValidator</strong> and the <strong>ContainsCharactersValidator</strong>, both of which test that a string contains a specified target sub-string or expression.</li>
+        <li>The <strong>TypeConversionValidator</strong>, which tests to see if a string can be converted to some other type.</li>
+        </ul>
+        </li>
+        <li>Validators for testing the comparative values of fields, such as the <strong>PropertyComparisonValidator</strong> and the <strong>RelativeDateTimeValidator</strong>.</li>
+        <li>The <strong>DomainValidator</strong> and the <strong>EnumValidator</strong>, which checks to see that a value falls within a specified set of acceptable values.</li>
+        <li>The <strong>ObjectValidator</strong> and the <strong>ObjectCollectionValidator</strong>, which are used to invoke validation methods on data members which are also validation-enabled objects.</li>
+        </ul>
+        <p>In addition to these built-in validators the Validation Application Block also includes methods for creating user-defined validators and for composing validators into <strong>ValidatorComposition</strong>s which can process more complex validation rules.</p>
+        <h3>How to Add the Validation Application Block to a Visual Studio Project</h3>
+        <p>Before you worry about how to start adding validators to all of your business objects, you need to include the necessary assemblies into your Visual Studio / Visual [X] Express projects. After you've downloaded and installed the <a href="http://www.microsoft.com/downloads/details.aspx?FamilyId=bcb166f7-dd16-448b-a152-9845760d9b4c&amp;displaylang=en">Enterprise Library 5.0</a> or *<a href="http://www.microsoft.com/downloads/details.aspx?FamilyId=1643758B-2986-47F7-B529-3E41584B6CE5&amp;displaylang=en">Enterprise Library 4.1</a> binaries onto your system, open your existing Visual Studio Project or create a new one.&nbsp;Open the <strong>Solution Explorer</strong>, expand the <strong>References</strong> folder, right click on the <strong>References</strong> folder and click on <strong>Add Reference</strong>.&nbsp;</p>
+        <p style="text-align: center;"><img src="http://www.aaronstannard.com/image.axd?picture=2010%2f5%2fadding-assembly-reference-part-1.png" alt="" /></p>
+        <p style="text-align: left;">Select the following two assemblies (typically they'll be installed to your system's GAC so you won't need to go hunting for them) - <strong>Enterprise Library Shared Library</strong> and <strong>Enterprise Library Validation Application Block</strong>. The Validation Application Block depends on Shared Library (as do many other components in the Enterprise Library), and you'll run into some run-time errors without it included in your project's <strong>References</strong> folder.</p>
+        <p style="TEXT-ALIGN: center"><img src="http://www.aaronstannard.com/image.axd?picture=2010%2f5%2fadding-validationapplicationblock-assemblies2.png" alt="" /></p>
+        <p style="TEXT-ALIGN: left">If you're designing a WinForms or an ASP.NET application, you may want to include the special Validation Application Block WinForms Integration or Validation Application Block ASP.NET Integration assemblies, but if you're designing validation rules for individual business object classes and not presentation-layer events, you may not need them.</p>
+        <h3 style="TEXT-ALIGN: left">Example: Using Built-in Validators for Validating an Address</h3>
+        <p style="TEXT-ALIGN: left">I'm going to end this post with a simple example which will show you how to get started using the Validation Application Block's attribute-based validators, and I'll expand on this in subsequent posts. We're going to work with a simple class which contains an address based in the United States:</p>
+        <pre class="brush: c-sharp;">public class USAddress
+        {
+        public string RecipientName { get; set; }
+        public string Street { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public string ZipCode { get; set; }
+        }</pre>
+        <p>We know that addresses based in the United States need to comply with the following business rules:</p>
+        <ol>
+        <li>All of these fields must be filled in;</li>
+        <li>A street must contain a street name and a street number;</li>
+        <li>A state code must be two characters in length; and</li>
+        <li>A zip code contains exactly five or nine&nbsp;digits.</li>
+        </ol>
+        <p>&nbsp;So, let's examine how we can use some validators to ensure that this business object enforces these business rules. The first step is to ensure that our source code references the&nbsp;correct namespace:</p>
+        <pre class="brush: c-sharp;">using Microsoft.Practices.EnterpriseLibrary.Validation.Validators;</pre>
+        <p>&nbsp;Next, let's go ahead and enforce business rule #1 - <em>all address fields must be filled in</em>. We can accomplish by decorating each field with <strong>NotNullValidator</strong> attribute:</p>
+        <pre class="brush: c-sharp;">using System;
+        using System.Text;
+        using Microsoft.Practices.EnterpriseLibrary.Validation.Validators;
+
+        namespace Business_Entities
+        {
+        public class USAddress
+        {
+        [NotNullValidator()]
+        public string RecipientName { get; set; }
+
+        [NotNullValidator()]
+        public string Street { get; set; }
+
+        [NotNullValidator()]
+        public string City { get; set; }
+
+        [NotNullValidator()]
+        public string State { get; set; }
+
+        [NotNullValidator()]
+        public string ZipCode { get; set; }
+        }
+        }</pre>
+        <p>Let's see if this works. Here's some simple code we can use to test the validators by calling the<strong> Validator.Validate()</strong> method against an instance of this class.</p>
+        <pre class="brush: c-sharp;">using System;
+        using System.Text;
+        using Business_Entities;
+        using Microsoft.Practices.EnterpriseLibrary.Validation;
+
+        namespace Basic_Validation__Console_
+        {
+        class Program
+        {
+        static void Main(string[] args)
+        {
+        //Create a blank test address
+        USAddress testaddress = new USAddress();
+
+        //Create a new validator using the ValidationFactory method
+        Validator validator = ValidationFactory.CreateValidator&lt;USAddress&gt;();
+        ValidationResults results = new ValidationResults();
+        validator.Validate(testaddress, results);
+
+        Console.Write("Is the test address valid? {0}", results.IsValid);
+        //Stop the console screen from disappearing immediately.
+        Console.ReadKey();
+        }
+        }
+        }</pre>
+        <p>And what happens when we run this test code?&nbsp;</p>
+        <p style="text-align: center;"><img src="http://www.aaronstannard.com/image.axd?picture=2010%2f5%2fvalidationtest1-success.png" alt="" /></p>
+        <p>Smells like success to me. Let's re-run this test using a valid address.</p>
+        <pre class="brush: c-sharp;">//A real(ish) test address
+        USAddress testaddress = new USAddress();
+        testaddress.RecipientName = "Bob Jones";
+        testaddress.City = "Beverly Hills";
+        testaddress.State = "CA";
+        testaddress.Street = "1205 Rodeo Drive";
+        testaddress.ZipCode = "90210";</pre>
+        <p>And the result is:&nbsp;</p>
+        <p style="text-align: center;"><img src="http://www.aaronstannard.com/image.axd?picture=2010%2f5%2fvalidationtest2-success.png" alt="" /></p>
+        <p style="text-align: left;">Looks like the <strong>NotNullValidator</strong>&nbsp;is working as intended. But wait a minute, how did this <strong>ValidationFactory.CreateValidator()</strong> method know how to create a Validator object that properly validates any instance of a <strong>USAddress</strong> object?</p>
+        <p style="text-align: left;">Because we decorated the <strong>USAddress</strong> class with one or more Validator attributes, the underlying Validation Application Block&nbsp;library automatically implements and registers&nbsp;a Validator class designed to support the <strong>USAddress</strong> class. Internally, the Validation Application Block uses an instance of <a href="http://unity.codeplex.com/">Unity</a> to resolve a custom validator for the <strong>USAddress</strong> class on-the-fly.</p>
+        <p style="text-align: left;">Let's enforce some of the other business rules, starting with the state code.</p>
+        <pre class="brush: c-sharp;">[NotNullValidator()]
+        [StringLengthValidator(2, RangeBoundaryType.Inclusive, 2, RangeBoundaryType.Inclusive)]
+        public string State { get; set; }</pre>
+        <p>As you can see I've added a <strong>StringLengthValidator</strong> in addition to the <strong>NotNullValidator</strong> that was already in place (yes, you can add more than one Validator attribute to a field.) I've specified the following parameters for this validator:</p>
+        <ol>
+        <li>lowerBound = 2</li>
+        <li>lowerBound RangeBoundaryType = Inclusive (meaning that this value is included in the range of acceptable string length values)</li>
+        <li>upperBound = 2</li>
+        <li>upperBound RangeBoundaryType = Inclusive (this value is also included in the range of acceptable string length values)</li>
+        </ol>
+        <p>There are three possible range boundary types:</p>
+        <ol>
+        <li><strong>Inclusive</strong>, which is the equivalent of [] in traditional mathematical syntax;</li>
+        <li><strong>Exclusive</strong>, which is the equivalent of () in traditional mathematical syntax; and</li>
+        <li><strong>Ignore</strong>, which is the equivalent of (infinity,&nbsp;or infinity) in traditional mathematical syntax.</li>
+        </ol>
+        <p>Now the next change we need to make is to check for a valid zip code, which can be either 9 or 5 digits. I'm going to do this using a&nbsp;<strong>RegexValidator</strong> - another way to do this is to create an <strong>ValidatorComposition</strong> (an "Or" type as opposed to an "And" type) with two different string length validators. Here's what our <strong>RegexValidator</strong> looks like:</p>
+        <pre class="brush: c-sharp;">[NotNullValidator()]
+        [RegexValidator(@"^(\d{5}-\d{4}|\d{5}|\d{9})$|^([a-zA-Z]\d[a-zA-Z] \d[a-zA-Z]\d)$")]
+        public string ZipCode { get; set; }</pre>
+        <p>Hat tip to Microsoft's&nbsp;Patterns &amp; Practices group&nbsp;for providing me with <a href="http://msdn.microsoft.com/en-us/library/ff650303.aspx">the regular expression for validating US&nbsp;zip codes</a>.</p>
+        <p>Now, our source code for testing this validation has not changed one bit - all of the changes to the validator for the <strong>USAddress</strong> class occur behind the scenes. Once I recompile my class library and re-run the test I should get a "validation successful" message back from the console:&nbsp;</p>
+        <p style="text-align: center;"><img src="http://www.aaronstannard.com/image.axd?picture=2010%2f5%2fvalidationtest3-success.png" alt="" /></p>
+        <p style="text-align: left;">Well hell yeah, that'll do it! If I wanted to validate the last business rule (the street address must contain both a street name and number,) I could write another <strong>RegexValidator</strong> for that and hook it up in much the same way as my <strong>RegexValidator</strong> for zip codes. And that's all it really takes to get started with the Microsoft Enterprise Library Validation Application Block. In my next article on the subject I'll include some examples on how / when you should use <strong>ObjectValidators</strong> and why they're so useful.</p>
+        <p style="text-align: left;">*Although the latest version of the Validation Application Block is version 5.0, my example code uses <a href="http://msdn.microsoft.com/en-us/library/ff647292(v=pandp.10).aspx">Enterprise Library&nbsp;version 4.1</a>, namely because my individual development&nbsp;environment has some issues with the <a href="http://entlib.codeplex.com/WorkItem/View.aspx?WorkItemId=26903">Validation Application Block 5.0 and the GAC</a>. Given that there are no major&nbsp;syntactical differences between the two versions, I'm going to do what any economical programmer would do and use what works instead of dicking around with configuration files, assembly directories, and things that are frankly tangential to developing applications.</p>
+        <div class="addthis_toolbox addthis_default_style"  style="padding-top:10px" >
+        <a style="padding-right:10px" href="http://www.addthis.com/bookmark.php?v=250&username=aaronontheweb&url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f05%2f24%2fEnterprise-Library-Validation-Block-Part-1.aspx&title=How+to+Use+the+Microsoft+Enterprise+Library+Validation+Application+Block%2c+Part+1&description="><img src="http://s7.addthis.com/static/btn/v2/sm-share-en.gif"  alt="Bookmark and Share" style="border:0"/></a>
+        <a  style="padding-right:10px" href="http://www.addthis.com/bookmark.php?v=250&username=aaronontheweb&url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f05%2f24%2fEnterprise-Library-Validation-Block-Part-1.aspx&title=How+to+Use+the+Microsoft+Enterprise+Library+Validation+Application+Block%2c+Part+1&description=&s=dotnetkicks"><img  src="http://dotnetkicks.com/Services/Images/KickItImageGenerator.ashx?url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f05%2f24%2fEnterprise-Library-Validation-Block-Part-1.aspx" border="0" alt="DotnetKicks" /></a>
+        <a style="padding-right:10px" href="http://www.addthis.com/bookmark.php?v=250&username=aaronontheweb&url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f05%2f24%2fEnterprise-Library-Validation-Block-Part-1.aspx&title=How+to+Use+the+Microsoft+Enterprise+Library+Validation+Application+Block%2c+Part+1&description=&s=dotnetshoutout"><img style="height:19px" height="19px" src="http://dotnetshoutout.com/image.axd?url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f05%2f24%2fEnterprise-Library-Validation-Block-Part-1.aspx" border="0" alt="dotnetshoutout" /></a>
+        </div><p style="margin-top:15px;"><em>If you enjoyed this post, remember to <a style="background:none;padding-right:0px;" href="http://www.aaronstannard.com/syndication.axd">subscribe to my RSS feed</a>!</em></p>
+      
+Categories: .NET 
+Comments: http://www.aaronstannard.com/post/2010/05/24/Enterprise-Library-Validation-Block-Part-1.aspx#comment
+
+feed items[8] = Title: How to Test Regular Expressions in .NET without Giving Yourself Migraines
+Published: 5/17/2010 10:56:00 AM
+URL: http://www.aaronstannard.com/post/2010/05/17/How-to-Test-Regular-Expressions-in-NET-without-Giving-Yourself-Migraines.aspx
+Author: Aaronontheweb
+Id: http://www.aaronstannard.com/post.aspx?id=55b3c313-a54c-46b5-881b-2ea1ab672238
+Content: 
+        <p style="text-align: left;">I write a lot of parse-heavy applications, so naturally I spend a fair amount of my development time writing and testing regular expressions. Regular expressions are one of those&nbsp;programming&nbsp;constructs&nbsp;where you always have a clear idea of what you need to&nbsp;do&nbsp;but you work with them just infrequently&nbsp;enough that you&nbsp;can never actually&nbsp;remember the exact syntax. And if you're like me, this means a multi-hour regex 101 refresher until you get it right.</p>
+        <p style="text-align: left;">Rather than testing my regular expressions in the middle of a unit test or in&nbsp;some temporary debug code, I've started using <a href="http://www.regular-expressions.info/dotnet.html">.NET Framework Regular Expressions Demo</a>&nbsp;(scroll down to the bottom)&nbsp;provided by <a href="http://www.regular-expressions.info/">Regular-Expressions.info</a>. It's a simple Windows Forms application that allows you to run quick regex tests using the System.Text.RegularExpressions engine, which is nice because&nbsp;it's actual regular expressions&nbsp;engine you'll be using in your .NET&nbsp;production code.</p>
+        <p>Let me show you how it works using a couple of examples. Suppose we've written the following regular expressions (in C#)&nbsp;for testing the validity of a user's email address:</p>
+        <pre class="brush: c-sharp;">string EmailRegex1 = @"\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b";
+        string EmailRegex2 = @"^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$";
+        string EmailRegex3 = @"^[\w-]+@([\w-]+\.)+[\w-]+$";</pre>
+        <p>We need to verify that these regular expressions work in all of our use cases:</p>
+        <ol>
+        <li>firstname@email.com</li>
+        <li>fistname.lastname@email.com</li>
+        <li>firstname@email.subdomain.com</li>
+        <li>first-name@email.com</li>
+        <li>Etc...</li>
+        </ol>
+        <p>Let's&nbsp;see how we can do&nbsp;accomplish this&nbsp;using the .NET Regex Demo:&nbsp;</p>
+        <p style="text-align: center;"><img src="http://www.aaronstannard.com/image.axd?picture=2010%2f5%2fregex-testing1.png" alt="" /></p>
+        <p>Plugin your regular expression and your test case into their appropriate fields and hit the match test button.</p>
+        <p>&nbsp;</p>
+        <p style="text-align: center;"><img src="http://www.aaronstannard.com/image.axd?picture=2010%2f5%2fregex-testing2.png" alt="" /></p>
+        <p>Whoops! Our test case failed? Perhaps it's because <a href="http://www.regular-expressions.info/email.html">the regex doesn't account for case</a>&nbsp;- I'll re-run the test with the System.Text.RegularExpressions' "Case insensitive" option set to true this time.</p>
+        <p style="text-align: center;"><img src="http://www.aaronstannard.com/image.axd?picture=2010%2f5%2fregex-testing3.png" alt="" /></p>
+        <p>&nbsp;</p>
+        <p style="text-align: center;"><img src="http://www.aaronstannard.com/image.axd?picture=2010%2f5%2fregex-testing4.png" alt="" /></p>
+        <p>That did the trick - so if I wanted to use this particular regex in my production code, I'd just need to remember to set the Regex engine's IgnoreCase option to true:</p>
+        <pre class="brush: c-sharp;">string EmailRegex1 = @"\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b";
+
+        Regex r = new Regex(EmailRegex1, RegexOptions.IgnoreCase);
+        r.Match("firstname@email.com");</pre>
+        <p style="text-align: left;">This is way better than testing regular expressions through NUnit tests and debug code.</p>
+        <p><strong>Download (.zip)</strong> <a href="http://www.regular-expressions.info/download/csharpregexdemo.zip">http://www.regular-expressions.info/download/csharpregexdemo.zip</a>&nbsp;</p>
+        <div class="addthis_toolbox addthis_default_style"  style="padding-top:10px" >
+        <a style="padding-right:10px" href="http://www.addthis.com/bookmark.php?v=250&username=aaronontheweb&url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f05%2f17%2fHow-to-Test-Regular-Expressions-in-NET-without-Giving-Yourself-Migraines.aspx&title=How+to+Test+Regular+Expressions+in+.NET+without+Giving+Yourself+Migraines&description="><img src="http://s7.addthis.com/static/btn/v2/sm-share-en.gif"  alt="Bookmark and Share" style="border:0"/></a>
+        <a  style="padding-right:10px" href="http://www.addthis.com/bookmark.php?v=250&username=aaronontheweb&url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f05%2f17%2fHow-to-Test-Regular-Expressions-in-NET-without-Giving-Yourself-Migraines.aspx&title=How+to+Test+Regular+Expressions+in+.NET+without+Giving+Yourself+Migraines&description=&s=dotnetkicks"><img  src="http://dotnetkicks.com/Services/Images/KickItImageGenerator.ashx?url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f05%2f17%2fHow-to-Test-Regular-Expressions-in-NET-without-Giving-Yourself-Migraines.aspx" border="0" alt="DotnetKicks" /></a>
+        <a style="padding-right:10px" href="http://www.addthis.com/bookmark.php?v=250&username=aaronontheweb&url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f05%2f17%2fHow-to-Test-Regular-Expressions-in-NET-without-Giving-Yourself-Migraines.aspx&title=How+to+Test+Regular+Expressions+in+.NET+without+Giving+Yourself+Migraines&description=&s=dotnetshoutout"><img style="height:19px" height="19px" src="http://dotnetshoutout.com/image.axd?url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f05%2f17%2fHow-to-Test-Regular-Expressions-in-NET-without-Giving-Yourself-Migraines.aspx" border="0" alt="dotnetshoutout" /></a>
+        </div><p style="margin-top:15px;"><em>If you enjoyed this post, remember to <a style="background:none;padding-right:0px;" href="http://www.aaronstannard.com/syndication.axd">subscribe to my RSS feed</a>!</em></p>
+      
+Categories: .NET 
+Comments: http://www.aaronstannard.com/post/2010/05/17/How-to-Test-Regular-Expressions-in-NET-without-Giving-Yourself-Migraines.aspx#comment
+
+feed items[9] = Title: BlogEngine.NET Extension - Remind Your Readers to Subscribe to Your RSS Feed with SubscribeRemind
+Published: 5/15/2010 10:55:00 PM
+URL: http://www.aaronstannard.com/post/2010/05/15/subscribe-remind.aspx
+Author: Aaronontheweb
+Id: http://www.aaronstannard.com/post.aspx?id=125075a7-ea8f-4327-918d-62a85db8ead3
+Content: 
+        <p>One of my favorite WordPress plugins dating all the way back to when I first started blogging is <a href="http://trevorfitzgerald.com/subscribe-remind/">Subscribe-Remind (WordPress)</a>&nbsp;- it simply appends a small&nbsp;RSS subscription reminder&nbsp;to the footer of every blog entry&nbsp;for your readers! The reminder reads something like this:</p>
+        <p style="padding-left: 30px;"><em>If you enjoyed this post, make sure you </em><span style="color: #677284;"><em><span style="text-decoration: underline;">subscribe to my RSS feed</span></em></span><em>!</em></p>
+        <p>Simple&nbsp;enough, right? I've made a port of this popular WordPress plugin for <a href="http://www.dotnetblogengine.net/">BlogEngine.NET</a>, <strong>SubscribeRemind</strong>, which does exactly the same thing as its WordPress counter part. It appends a small subscription reminder at the footer of every blog post using the RSS feed specified through the BlogEngine.NET settings.</p>
+        <p>If you're using an alternate RSS address (i.e. FeedBurner), the&nbsp;extension will automatically&nbsp;use that one as the target - it uses whatever RSS feed target you've specified in your BlogEngine.NET settings.&nbsp;</p>
+        <p>I've found that&nbsp;adding an RSS susbscription reminder at the footer of all of my blog entries has historically&nbsp;increased&nbsp;my total number of subscribers, so I highly recommend that you add this Extension to your blog!</p>
+        <p>&nbsp;<strong>Download: </strong><a href="http://www.aaronstannard.com/file.axd?file=2010%2f5%2fSubscribeRemindExtension.zip">SubscribeRemindExtension.zip (1.66 kb)</a></p>
+        <h3>Customizing the&nbsp;Reminder&nbsp;</h3>
+        <p>You can change the reminder call to action yourself using the BlogEngine.NET extensions manager. Simply go to the Extensions page and click on the "edit" button for SubscribeRemind's settings:&nbsp;&nbsp;</p>
+        <p><img src="http://www.aaronstannard.com/image.axd?picture=2010%2f5%2fblogenginenet-extensions-pagecta.png" alt="" /></p>
+        <p>If you want to change the reminder call to action / message that appears at the bottom of every blog post, you can simply modify the value shown below:</p>
+        <p><img src="http://www.aaronstannard.com/image.axd?picture=2010%2f5%2fblogengine-extensions-subscriberemindsettings1.png" alt="" /></p>
+        <p>Hit the update button after you've made your changes and placed the [link] [/link] tags around your desired anchor text.</p>
+        <p>&nbsp;</p>
+        <p><img src="http://www.aaronstannard.com/image.axd?picture=2010%2f5%2fblogengine-extensions-subscriberemindsettings2.png" alt="" /></p>
+        <p>The instructions included with the ExtensionsManager are straight-forward.</p>
+        <p><strong>Download: </strong><a href="http://www.aaronstannard.com/file.axd?file=2010%2f5%2fSubscribeRemindExtension.zip">SubscribeRemindExtension.zip (1.66 kb)</a>&nbsp;</p>
+        <p>If you have any questions, suggestions, or comments about SubscribeRemind, please leave them below and I'll answer them as soon as I can.</p>
+        <div class="addthis_toolbox addthis_default_style"  style="padding-top:10px" >
+        <a style="padding-right:10px" href="http://www.addthis.com/bookmark.php?v=250&username=aaronontheweb&url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f05%2f15%2fsubscribe-remind.aspx&title=BlogEngine.NET+Extension+-+Remind+Your+Readers+to+Subscribe+to+Your+RSS+Feed+with+SubscribeRemind&description="><img src="http://s7.addthis.com/static/btn/v2/sm-share-en.gif"  alt="Bookmark and Share" style="border:0"/></a>
+        <a  style="padding-right:10px" href="http://www.addthis.com/bookmark.php?v=250&username=aaronontheweb&url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f05%2f15%2fsubscribe-remind.aspx&title=BlogEngine.NET+Extension+-+Remind+Your+Readers+to+Subscribe+to+Your+RSS+Feed+with+SubscribeRemind&description=&s=dotnetkicks"><img  src="http://dotnetkicks.com/Services/Images/KickItImageGenerator.ashx?url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f05%2f15%2fsubscribe-remind.aspx" border="0" alt="DotnetKicks" /></a>
+        <a style="padding-right:10px" href="http://www.addthis.com/bookmark.php?v=250&username=aaronontheweb&url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f05%2f15%2fsubscribe-remind.aspx&title=BlogEngine.NET+Extension+-+Remind+Your+Readers+to+Subscribe+to+Your+RSS+Feed+with+SubscribeRemind&description=&s=dotnetshoutout"><img style="height:19px" height="19px" src="http://dotnetshoutout.com/image.axd?url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f05%2f15%2fsubscribe-remind.aspx" border="0" alt="dotnetshoutout" /></a>
+        </div><p style="margin-top:15px;"><em>If you enjoyed this post, remember to <a style="background:none;padding-right:0px;" href="http://www.aaronstannard.com/syndication.axd">subscribe to my RSS feed</a>!</em></p>
+      
+Categories: .NET 
+Comments: http://www.aaronstannard.com/post/2010/05/15/subscribe-remind.aspx#comment
+

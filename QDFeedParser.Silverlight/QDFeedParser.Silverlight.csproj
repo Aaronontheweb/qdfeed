@@ -1,0 +1,151 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C2F4B5EE-E0B0-4E11-BA3A-3DBEBE3A0E52}</ProjectGuid>
+    <ProjectTypeGuids>{A1591282-1198-4647-A2B1-27E5FF5F6F3B};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>QDFeedParser.Silverlight</RootNamespace>
+    <AssemblyName>QDFeedParser.Silverlight</AssemblyName>
+    <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <SilverlightApplication>false</SilverlightApplication>
+    <ValidateXaml>true</ValidateXaml>
+    <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
+  </PropertyGroup>
+  <!-- This property group is only here to support building this project using the 
+       MSBuild 3.5 toolset. In order to work correctly with this older toolset, it needs 
+       to set the TargetFrameworkVersion to v3.5 -->
+  <PropertyGroup Condition="'$(MSBuildToolsVersion)' == '3.5'">
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;TRACE;SILVERLIGHT</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>Bin\Release</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Batch Build|AnyCPU'">
+    <OutputPath>bin\Batch Build\</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoStdLib>true</NoStdLib>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <NoConfig>true</NoConfig>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Windows" />
+    <Reference Include="system" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Windows.Browser" />
+    <Reference Include="System.Xml.Linq, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\QDFeedParser\AsyncFeedRequestState.cs">
+      <Link>AsyncFeedRequestState.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\Atom10Feed.cs">
+      <Link>Atom10Feed.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\Atom10FeedItem.cs">
+      <Link>Atom10FeedItem.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\BaseFeedFactory.cs">
+      <Link>BaseFeedFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\BaseFeedItem.cs">
+      <Link>BaseFeedItem.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\BaseSyndicationFeed.cs">
+      <Link>BaseSyndicationFeed.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\DefaultFeedInstanceProvider.cs">
+      <Link>DefaultFeedInstanceProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\FeedTuple.cs">
+      <Link>FeedTuple.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\FeedType.cs">
+      <Link>FeedType.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\HttpFeedFactory.cs">
+      <Link>HttpFeedFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\IFeed.cs">
+      <Link>IFeed.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\IFeedFactory.cs">
+      <Link>IFeedFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\IFeedInstanceProvider.cs">
+      <Link>IFeedInstanceProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\IFeedItem.cs">
+      <Link>IFeedItem.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\QDFeedExceptions.cs">
+      <Link>QDFeedExceptions.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\Rss20Feed.cs">
+      <Link>Rss20Feed.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\Rss20FeedItem.cs">
+      <Link>Rss20FeedItem.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\Xml\FeedXmlParserBase.cs">
+      <Link>Xml\FeedXmlParserBase.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\Xml\IFeedXmlParser.cs">
+      <Link>Xml\IFeedXmlParser.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\Xml\LinqFeedXmlParser.cs">
+      <Link>Xml\LinqFeedXmlParser.cs</Link>
+    </Compile>
+    <Compile Include="Extensions\SilverlightAsyncResult.cs" />
+    <Compile Include="IsolatedStorageFeedFactory.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{A1591282-1198-4647-A2B1-27E5FF5F6F3B}">
+        <SilverlightProjectProperties />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

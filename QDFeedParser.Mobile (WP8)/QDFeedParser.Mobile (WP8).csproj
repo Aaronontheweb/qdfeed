@@ -1,0 +1,175 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.20506</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5D5E8118-8C5A-48AB-BAA4-0644044FBA2D}</ProjectGuid>
+    <ProjectTypeGuids>{C089C8C0-30E0-4E22-80C0-CE093F111A43};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>QDFeedParse.Mobile</RootNamespace>
+    <AssemblyName>QDFeedParse.Mobile</AssemblyName>
+    <TargetFrameworkIdentifier>WindowsPhone</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v8.0</TargetFrameworkVersion>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <SilverlightApplication>false</SilverlightApplication>
+    <ValidateXaml>true</ValidateXaml>
+    <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
+    <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Bin\Debug</OutputPath>
+    <DefineConstants>TRACE;DEBUG;SILVERLIGHT;WINDOWS_PHONE;WP8</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>Bin\Release</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT;WINDOWS_PHONE;WP8</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Bin\x86\Debug</OutputPath>
+    <DefineConstants>TRACE;DEBUG;SILVERLIGHT;WINDOWS_PHONE;WP8</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>Bin\x86\Release</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT;WINDOWS_PHONE;WP8</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|ARM' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Bin\ARM\Debug</OutputPath>
+    <DefineConstants>TRACE;DEBUG;SILVERLIGHT;WINDOWS_PHONE;WP8</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|ARM' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>Bin\ARM\Release</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT;WINDOWS_PHONE;WP8</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\QDFeedParser %28NET45%29\BaseFeedFactory.async.cs">
+      <Link>BaseFeedFactory.async.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser %28NET45%29\HttpFeedFactory.async.cs">
+      <Link>HttpFeedFactory.async.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser %28NET45%29\IFeedFactory.async.cs">
+      <Link>IFeedFactory.async.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser.Silverlight\Extensions\SilverlightAsyncResult.cs">
+      <Link>Extensions\SilverlightAsyncResult.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser.Silverlight\IsolatedStorageFeedFactory.cs">
+      <Link>IsolatedStorageFeedFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\AsyncFeedRequestState.cs">
+      <Link>AsyncFeedRequestState.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\Atom10Feed.cs">
+      <Link>Atom10Feed.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\Atom10FeedItem.cs">
+      <Link>Atom10FeedItem.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\BaseFeedFactory.cs">
+      <Link>BaseFeedFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\BaseFeedItem.cs">
+      <Link>BaseFeedItem.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\BaseSyndicationFeed.cs">
+      <Link>BaseSyndicationFeed.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\DefaultFeedInstanceProvider.cs">
+      <Link>DefaultFeedInstanceProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\FeedTuple.cs">
+      <Link>FeedTuple.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\FeedType.cs">
+      <Link>FeedType.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\HttpFeedFactory.cs">
+      <Link>HttpFeedFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\IFeed.cs">
+      <Link>IFeed.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\IFeedFactory.cs">
+      <Link>IFeedFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\IFeedInstanceProvider.cs">
+      <Link>IFeedInstanceProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\IFeedItem.cs">
+      <Link>IFeedItem.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\QDFeedExceptions.cs">
+      <Link>QDFeedExceptions.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\Rss20Feed.cs">
+      <Link>Rss20Feed.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\Rss20FeedItem.cs">
+      <Link>Rss20FeedItem.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\Xml\FeedXmlParserBase.cs">
+      <Link>Xml\FeedXmlParserBase.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\Xml\IFeedXmlParser.cs">
+      <Link>Xml\IFeedXmlParser.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\Xml\LinqFeedXmlParser.cs">
+      <Link>Xml\LinqFeedXmlParser.cs</Link>
+    </Compile>
+    <Compile Include="Extensions\HttpExtensions.cs" />
+    <Compile Include="IsolatedStorageFeedFactory.async.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />
+  <ProjectExtensions />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

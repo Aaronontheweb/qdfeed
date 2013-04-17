@@ -1,0 +1,267 @@
+feed items[0] = Title: How to Query a User's del.icio.us Feed with RestSharp
+Published: 6/14/2010 5:26:00 PM
+URL: http://www.aaronstannard.com/post/2010/06/14/How-to-Parse-a-Users-Delicious-Feed-with-RestSharp.aspx
+Author: Aaronontheweb
+Id: http://www.aaronstannard.com/post.aspx?id=65c351cf-dfd5-4508-a2b9-6f9c2a5c1251
+Content: 
+        <p>I've been meaning to give <a href="http://restsharp.org/">RestSharp</a> a go since I first started using Hammock in my startup project's codebase, just because <a href="http://herdingcode.com/?p=244">I had heard&nbsp;some good things&nbsp;about&nbsp;RestSharp's auto-parsing capabilities</a>.</p>
+        <p>This weekend I cobbled together a small example using del.icio.us' RSS feeds (not to be confused with its draconian REST API) for users and RestSharp performed magnificently, although its POCO -&gt; XML Element mapping process requires a lot of experimentation before you get it just right.</p>
+        <p>Here's an example RSS feed for <a href="http://delicious.com/Aaronontheweb">my personal del.icio.us account</a>:</p>
+        <pre class="brush: xml;">&lt;rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://web.resource.org/cc/"&gt;
+        &lt;channel&gt;
+        &lt;title&gt;Delicious/Aaronontheweb&lt;/title&gt;
+        &lt;link&gt;http://delicious.com/Aaronontheweb&lt;/link&gt;
+        &lt;description&gt;bookmarks posted by Aaronontheweb&lt;/description&gt;
+        &lt;atom:link rel="self" type="application/rss+xml" href="http://feeds.delicious.com/v2/rss/Aaronontheweb?count=2"/&gt;
+        &lt;item&gt;
+        &lt;title&gt;Windows Presentation Foundation (WPF) Dialog Boxes Overview&lt;/title&gt;
+        &lt;pubDate&gt;Fri, 04 Jun 2010 23:48:12 +0000&lt;/pubDate&gt;
+        &lt;guid isPermaLink="false"&gt;[REMOVED]&lt;/guid&gt;
+        &lt;link&gt;http://msdn.microsoft.com/en-us/library/aa969773.aspx&lt;/link&gt;
+        &lt;dc:creator&gt;&lt;![CDATA[Aaronontheweb]]&gt;&lt;/dc:creator&gt;
+        &lt;comments&gt;[REMOVED]&lt;/comments&gt;
+        &lt;wfw:commentRss&gt;[REMOVED]&lt;/wfw:commentRss&gt;
+        &lt;source url="http://feeds.delicious.com/v2/rss/Aaronontheweb"&gt;Aaronontheweb's bookmarks&lt;/source&gt;
+        &lt;description&gt;How to use dialog boxes in WPF (for WPF noobs like myself.)&lt;/description&gt;
+        &lt;category domain="http://delicious.com/Aaronontheweb/"&gt;.net&lt;/category&gt;
+        &lt;category domain="http://delicious.com/Aaronontheweb/"&gt;wpf&lt;/category&gt;
+        &lt;category domain="http://delicious.com/Aaronontheweb/"&gt;dialogs&lt;/category&gt;
+        &lt;category domain="http://delicious.com/Aaronontheweb/"&gt;tutorial&lt;/category&gt;
+        &lt;category domain="http://delicious.com/Aaronontheweb/"&gt;nullable&lt;/category&gt;
+        &lt;category domain="http://delicious.com/Aaronontheweb/"&gt;c#&lt;/category&gt;
+        &lt;/item&gt;
+        &lt;item&gt;
+        &lt;title&gt;Developer's Guide: Data API Protocol - YouTube APIs and Tools - Google Code&lt;/title&gt;
+        &lt;pubDate&gt;Mon, 31 May 2010 22:43:47 +0000&lt;/pubDate&gt;
+        &lt;guid isPermaLink="false"&gt;[REMOVED]&lt;/guid&gt;
+        &lt;link&gt;[REMOVED]&lt;/link&gt;
+        &lt;dc:creator&gt;&lt;![CDATA[Aaronontheweb]]&gt;&lt;/dc:creator&gt;
+        &lt;comments&gt;[REMOVED]&lt;/comments&gt;
+        &lt;wfw:commentRss&gt;[REMOVED]&lt;/wfw:commentRss&gt;
+        &lt;source url="http://feeds.delicious.com/v2/rss/Aaronontheweb"&gt;Aaronontheweb's bookmarks&lt;/source&gt;
+        &lt;description&gt;Finally figured it out - how to sign all requests with my API key using a querystring. So simple, yet so difficult.&lt;/description&gt;
+        &lt;category domain="http://delicious.com/Aaronontheweb/"&gt;youtube&lt;/category&gt;
+        &lt;category domain="http://delicious.com/Aaronontheweb/"&gt;API&lt;/category&gt;
+        &lt;category domain="http://delicious.com/Aaronontheweb/"&gt;key&lt;/category&gt;
+        &lt;category domain="http://delicious.com/Aaronontheweb/"&gt;Google&lt;/category&gt;
+        &lt;category domain="http://delicious.com/Aaronontheweb/"&gt;gdata&lt;/category&gt;
+        &lt;/item&gt;
+        &lt;/channel&gt;
+        &lt;/rss&gt;</pre>
+        <p>The best way to utilize RestSharp to parse any sort of API response, whether it's custom REST XML, JSON, Atom, or RSS, is to first take a look at the raw response format and then to try to model a set of&nbsp;Data Transfer Objects (DTOs) which&nbsp;contain the response format elements you want to actually&nbsp;use in your application. Your DTOs just need to be simple POCO objects for this to work, but there are a set of <a href="http://wiki.github.com/johnsheehan/RestSharp/deserialization">POCO-XML Element matching&nbsp;rules</a> you need to observe if you're using RestSharp's default deserializer - <a href="http://wiki.github.com/johnsheehan/RestSharp/deserialization">you can read them here</a>.</p>
+        <p>Here are the classes that I modeled for this RSS format:</p>
+        <pre class="brush: c-sharp;">public class RssFeed
+        {
+        public string Version { get; set; }
+        public RssChannel Channel { get;set; }
+        }
+
+        public class RssChannel
+        {
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string Link { get; set; }
+        public RssItems Item { get; set; }
+        }
+
+        public class RssItems : List&lt;item&gt;{}
+
+        public class item
+        {
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string Link { get; set; }
+        public string Author { get; set; }
+        public string Comments { get; set; }
+        public string PubDate { get; set; }
+        }</pre>
+        <p>This diagram explains how these DTO classes map to the del.icio.us RSS format:</p>
+        <p style="text-align:center;"><a title="del.icio.us restsharp POCO class to XML document mapping by Aaronontheweb, on Flickr" href="http://www.flickr.com/photos/50581866@N06/4701896653/"><img src="http://farm5.static.flickr.com/4062/4701896653_08da0eaeb9.jpg" alt="del.icio.us restsharp POCO class to XML document mapping" width="488" height="286" /></a></p>
+        <blockquote>
+        <p><strong>ProTip: Handling Lists of XML Elements with POCO Classes</strong></p>
+        <p>One thing that's a bit tricky is handling lists of XML elements, such as the <span style="font-family: courier new,courier;">&lt;item&gt;</span> elements in this case. In order for RestSharp to&nbsp;deserialize&nbsp;them, you need&nbsp;create a List&lt;T&gt; object where the name of&nbsp;class&nbsp;T matches the name of the listed element, which is why my class name is <span style="font-family: courier new,courier;">item</span> in this case.</p>
+        </blockquote>
+        <p>Once you have your POCO classes in order, then you need to actually make requests against the del.icio.us feed for a particular user. Here's&nbsp;my code for doing that:</p>
+        <pre class="brush: c-sharp;">public class DeliciousRequest
+        {
+        public const string DeliciousFeedBase = @"http://feeds.delicious.com/v2/rss/";
+
+        private RestSharp.RestClient _client;
+
+        public DeliciousRequest()
+        {
+        this._client = new RestClient
+        {
+        BaseUrl = DeliciousFeedBase
+        };
+        }
+
+        public RssFeed GetBookMarksForUser(string username)
+        {
+        var request = new RestRequest {RequestFormat = DataFormat.Xml, Resource = username};
+        var response = this._client.Execute&lt;RssFeed&gt;(request);
+        return response.Data;
+        }
+
+        }</pre>
+        <p>All RSS feeds for del.icio.us users can be found using http://feeds.delicious.com/v2/rss/{USERNAME}, therefore you can understand why the <span style="font-family: courier new,courier;">RestClient</span>'s BaseURL and the <span style="font-family: courier new,courier;">RestRequest</span>'s Resource arguments are defined as they are. Once you have your <span style="font-family: courier new,courier;">RestRequest</span> defined, you simply call the client's <span style="font-family: courier new,courier;">Execute&lt;T&gt;</span> method where T is the type of your POCO DTO class.</p>
+        <p>And that's it - RestSharp is easy, and I look forward to creating some more examples with it down the road.</p>
+        <p><strong>More RestSharp Examples</strong>:</p>
+        <ul>
+        <li><a href="http://www.stum.de/2009/12/22/using-restsharp-to-consume-restful-web-services/">Using RestSharp to Consume RESTful Web Services</a></li>
+        <li><a href="http://lukencode.com/2010/04/14/google-weather-api-with-restsharp/">Google Weather API with RestSharp</a></li>
+        </ul>
+        <div class="addthis_toolbox addthis_default_style"  style="padding-top:10px" >
+        <a style="padding-right:10px" href="http://www.addthis.com/bookmark.php?v=250&username=aaronontheweb&url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f06%2f14%2fHow-to-Parse-a-Users-Delicious-Feed-with-RestSharp.aspx&title=How+to+Query+a+User's+del.icio.us+Feed+with+RestSharp&description="><img src="http://s7.addthis.com/static/btn/v2/sm-share-en.gif"  alt="Bookmark and Share" style="border:0"/></a>
+        <a  style="padding-right:10px" href="http://www.addthis.com/bookmark.php?v=250&username=aaronontheweb&url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f06%2f14%2fHow-to-Parse-a-Users-Delicious-Feed-with-RestSharp.aspx&title=How+to+Query+a+User's+del.icio.us+Feed+with+RestSharp&description=&s=dotnetkicks"><img  src="http://dotnetkicks.com/Services/Images/KickItImageGenerator.ashx?url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f06%2f14%2fHow-to-Parse-a-Users-Delicious-Feed-with-RestSharp.aspx" border="0" alt="DotnetKicks" /></a>
+        <a style="padding-right:10px" href="http://www.addthis.com/bookmark.php?v=250&username=aaronontheweb&url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f06%2f14%2fHow-to-Parse-a-Users-Delicious-Feed-with-RestSharp.aspx&title=How+to+Query+a+User's+del.icio.us+Feed+with+RestSharp&description=&s=dotnetshoutout"><img style="height:19px" height="19px" src="http://dotnetshoutout.com/image.axd?url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f06%2f14%2fHow-to-Parse-a-Users-Delicious-Feed-with-RestSharp.aspx" border="0" alt="dotnetshoutout" /></a>
+        </div><p style="margin-top:15px;"><em>If you enjoyed this post, remember to <a style="background:none;padding-right:0px;" href="http://www.aaronstannard.com/syndication.axd">subscribe to my RSS feed</a>!</em></p>
+      
+Categories: .NET Del.icio.us 
+Comments: http://www.aaronstannard.com/post/2010/06/14/How-to-Parse-a-Users-Delicious-Feed-with-RestSharp.aspx#comment
+
+feed items[1] = Title: The Myth of the Single-Person Startup
+Published: 6/12/2010 11:36:00 PM
+URL: http://www.aaronstannard.com/post/2010/06/12/The-Myth-of-the-Single-Person-Startup.aspx
+Author: Aaronontheweb
+Id: http://www.aaronstannard.com/post.aspx?id=70ef41af-dda6-4f73-a325-44cf7bbfb9c2
+Content: 
+        <p><a title="Lonely Road by Matt and Kim Rudge, on Flickr" href="http://www.flickr.com/photos/mattandkim/3734982429/"><img style="margin: 0px 0px 10px 10px; display: inline" src="http://farm3.static.flickr.com/2594/3734982429_6bb7844bef.jpg" alt="Lonely Road" width="402" height="268" align="right" /></a></p>
+        <p>During the month of May, 2010 I took an unpaid leave of absence from work for the entire month and set off to launch my own web-based startup company.</p>
+        <p><a title="Lonely Road by Matt and Kim Rudge, on Flickr" href="http://www.flickr.com/photos/mattandkim/3734982429/"></a></p>
+        <p>My objective was to take a month off work, shut myself away in my apartment, spend a month coding up all of the basic plumbing I needed to get the first core part of my service in working order, and profit. Needless to say, <strong>I failed to reach my goals</strong>,&nbsp; but not for any of the typical reasons like poor project planning, lack-of-focus, and so forth. No, I failed because I took the experiences of other entrepreneurs too literally and tried to &ldquo;be my own boss,&rdquo; without appreciating what that really means.</p>
+        <h3>Success doesn't occur in a vaccuum</h3>
+        <p>I grew up with a father who successfully launched his own self-funded business and made it look easy. Naturally, being the 24 year-old who doesn&rsquo;t know any better, I figured it was as easy as having the technical knowledge to engineer my own product, having a good eye&nbsp;for end-user requirements, having a decent business plan, and enough time / resources to actually put something to market.</p>
+        <p>Naturally, when I finally secured the time I needed to begin engineering my product in earnest, I shut myself away, locked out virtually all human contact, and dove head first into my code. After all, that&rsquo;s all what successful single-person startups do, right? &ldquo;Sure,&rdquo; I thought.</p>
+        <p>Twelve days into my project I&nbsp;had to scrap&nbsp;virtually every piece of code I had written &ndash; everything. It was a disaster. I wiped the slate clean and started redesigning and refactoring the entire thing, and I still hadn&rsquo;t said more than a few sentences about it to anybody. Bear in mind that I was living off of my savings, so&nbsp;the time = money&nbsp;factor&nbsp;loomed large over my head.&nbsp;I went back to work on my project, still determined to get something done.</p>
+        <p>With one week to go before I was due back at work, I bought lunch for the Chief Architect from my&nbsp;regular job and had him take a look at some of my UML diagrams. I explained the domain I was working in, what I was trying to do, and what trouble I had run into thus far. In that one hour of speaking with him, I learned things that could have saved me the previous&nbsp;three weeks of 16-hour days, sleepless nights, endless debugging, and lessons-learned-the-hard-way.</p>
+        <blockquote>
+        <p>This is going to seem like a total &ldquo;no shit&rdquo; observation for people who&rsquo;ve been around the block before, but bear with me: though there are many entrepreneurs who successfully start businesses where they are the sole founder and first employee, they never truly do it alone.</p>
+        <p>They use other colleagues as sounding boards for ideas; they run design ideas by people who are familiar with the business or engineering domain; they stay in touch with potential customers and clients all the way through the process; they operate in professional networks; and they do a much better job keeping friends and family in the loop than I did.</p>
+        </blockquote>
+        <p>I never looked at any of these contacts as must-have items before I set off on my own, and I got burned big time for it. I spent a substantial amount of time barking up the wrong trees and architecting solutions for the wrong problems, and all it would have taken to avoid that was some more collaboration and idea-sharing with people who were never going to be partners, employees, investors, et al.</p>
+        <h3>Stay in the loop with your people</h3>
+        <p>Lesson learned: the appeal of locking yourself in a confined space with nothing more than an Internet connection, a stack of programming books, and a mountain of pop tarts is significant if you&rsquo;re young and tired of people telling you what to do.</p>
+        <p>However, isolating yourself from the world while you undertake a startup project is disastrous &ndash; you don&rsquo;t necessarily need partners working with you day-in and day-out on the project, but you absolutely need sounding boards and supportive people you can share ideas and experiences with, because ultimately if you don&rsquo;t get some outside perspective on what you&rsquo;re doing, you&rsquo;ll make myopic decisions and stumble along the way.</p>
+        <p>Get feedback where you can; talk database schema with the DBA in the break room at your day job while he&rsquo;s refilling his coffee; share your ongoing startup problems with family and friends who&rsquo;ve launched businesses before; join online news groups and connect with other people familiar with your problem domain; just stay in contact.</p>
+        <p>Remember this: being independent isn't the same thing as being alone - always keep a network to support you even if their contributions never amount to something more than friendly advice and encouragement.</p>
+        <div class="addthis_toolbox addthis_default_style"  style="padding-top:10px" >
+        <a style="padding-right:10px" href="http://www.addthis.com/bookmark.php?v=250&username=aaronontheweb&url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f06%2f12%2fThe-Myth-of-the-Single-Person-Startup.aspx&title=The+Myth+of+the+Single-Person+Startup&description="><img src="http://s7.addthis.com/static/btn/v2/sm-share-en.gif"  alt="Bookmark and Share" style="border:0"/></a>
+        <a  style="padding-right:10px" href="http://www.addthis.com/bookmark.php?v=250&username=aaronontheweb&url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f06%2f12%2fThe-Myth-of-the-Single-Person-Startup.aspx&title=The+Myth+of+the+Single-Person+Startup&description=&s=dotnetkicks"><img  src="http://dotnetkicks.com/Services/Images/KickItImageGenerator.ashx?url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f06%2f12%2fThe-Myth-of-the-Single-Person-Startup.aspx" border="0" alt="DotnetKicks" /></a>
+        <a style="padding-right:10px" href="http://www.addthis.com/bookmark.php?v=250&username=aaronontheweb&url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f06%2f12%2fThe-Myth-of-the-Single-Person-Startup.aspx&title=The+Myth+of+the+Single-Person+Startup&description=&s=dotnetshoutout"><img style="height:19px" height="19px" src="http://dotnetshoutout.com/image.axd?url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f06%2f12%2fThe-Myth-of-the-Single-Person-Startup.aspx" border="0" alt="dotnetshoutout" /></a>
+        </div><p style="margin-top:15px;"><em>If you enjoyed this post, remember to <a style="background:none;padding-right:0px;" href="http://www.aaronstannard.com/syndication.axd">subscribe to my RSS feed</a>!</em></p>
+      
+Categories: Startup 
+Comments: http://www.aaronstannard.com/post/2010/06/12/The-Myth-of-the-Single-Person-Startup.aspx#comment
+
+feed items[2] = Title: Discussion: How to Use RestSharp / Hammock to Automatically Parse the YouTube Response Format into POCO Objects
+Published: 6/8/2010 10:35:00 PM
+URL: http://www.aaronstannard.com/post/2010/06/08/RestSharp-Hammock-Parse-YouTube.aspx
+Author: Aaronontheweb
+Id: http://www.aaronstannard.com/post.aspx?id=daa79e23-405f-48c8-93f9-f96d3097aa44
+Content: 
+        <p>If you've been <a href="http://twitter.com/MarketingNinja">following me on Twitter</a> over the past couple of weeks, you might have noticed that I've been a little <a href="http://twitter.com/MarketingNinja/status/15154555062">frustrated with the YouTube GData API lately</a>. Simply put: XML makes me sad. Since that frustrated Tweet I've developed a solution using LINQ-to-XML and a bunch of hard-coded namespaces which isn't how I would prefer to do it.</p>
+        <p>I would much rather use the built in object deserialization capabilities in <a href="http://restsharp.org/">RestSharp</a> or <a href="http://hammock.codeplex.com/">HammockREST</a>. I'll be honest - I do not have a damn clue how to use Hammock's built-in deserialization capabilities. I tried tinkering with it on my own to no avail, and there's not much documentation to speak of.</p>
+        <p><a href="http://wiki.github.com/johnsheehan/RestSharp/deserialization">RestSharp has some more detailed documentation on its deserialization capabilities</a>, but it doesn't answer some lingering questions I have. So without further aideu, I'd like to solicit the opinion of the developer community.</p>
+        <pre class="brush: xml;">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+        &lt;feed xmlns="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" xmlns:openSearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:gd="http://schemas.google.com/g/2005" xmlns:yt="http://gdata.youtube.com/schemas/2007" gd:etag="W/&amp;quot;DkMMRn0zeSp7ImA9WxFWE0k.&amp;quot;"&gt;
+        &lt;id&gt;tag:youtube.com,2008:user:smartdraw:uploads&lt;/id&gt;
+        &lt;updated&gt;2010-05-31T22:21:27.381Z&lt;/updated&gt;
+        &lt;category scheme="http://schemas.google.com/g/2005#kind" term="http://gdata.youtube.com/schemas/2007#video" /&gt;
+        &lt;title&gt;Uploads by smartdraw&lt;/title&gt;
+        &lt;logo&gt;http://www.youtube.com/img/pic_youtubelogo_123x63.gif&lt;/logo&gt;
+        &lt;link rel="related" type="application/atom+xml" href="http://gdata.youtube.com/feeds/api/users/smartdraw?v=2" /&gt;
+        &lt;link rel="alternate" type="text/html" href="http://www.youtube.com/profile_videos?user=smartdraw" /&gt;
+        &lt;link rel="http://schemas.google.com/g/2005#feed" type="application/atom+xml" href="http://gdata.youtube.com/feeds/api/users/smartdraw/uploads?v=2" /&gt;
+        &lt;link rel="http://schemas.google.com/g/2005#batch" type="application/atom+xml" href="http://gdata.youtube.com/feeds/api/users/smartdraw/uploads/batch?v=2" /&gt;
+        &lt;link rel="self" type="application/atom+xml" href="http://gdata.youtube.com/feeds/api/users/smartdraw/uploads?start-index=1&amp;amp;max-results=25&amp;amp;v=2" /&gt;
+        &lt;link rel="service" type="application/atomsvc+xml" href="http://gdata.youtube.com/feeds/api/users/smartdraw/uploads?alt=atom-service&amp;amp;v=2" /&gt;
+        &lt;link rel="next" type="application/atom+xml" href="http://gdata.youtube.com/feeds/api/users/smartdraw/uploads?start-index=26&amp;amp;max-results=25&amp;amp;v=2" /&gt;
+        &lt;author&gt;
+        &lt;name&gt;smartdraw&lt;/name&gt;
+        &lt;uri&gt;http://gdata.youtube.com/feeds/api/users/smartdraw&lt;/uri&gt;
+        &lt;/author&gt;
+        &lt;generator version="2.0" uri="http://gdata.youtube.com/"&gt;YouTube data API&lt;/generator&gt;
+        &lt;openSearch:totalResults&gt;30&lt;/openSearch:totalResults&gt;
+        &lt;openSearch:startIndex&gt;1&lt;/openSearch:startIndex&gt;
+        &lt;openSearch:itemsPerPage&gt;25&lt;/openSearch:itemsPerPage&gt;
+        &lt;entry gd:etag="W/&amp;quot;CEIHQn47eCp7ImA9WxFWE0k.&amp;quot;"&gt;
+        &lt;id&gt;tag:youtube.com,2008:video:NJPrllhYZrg&lt;/id&gt;
+        &lt;published&gt;2010-02-10T23:27:38.000Z&lt;/published&gt;
+        &lt;updated&gt;2010-05-31T21:48:53.000Z&lt;/updated&gt;
+        &lt;category scheme="http://schemas.google.com/g/2005#kind" term="http://gdata.youtube.com/schemas/2007#video" /&gt;
+        &lt;category scheme="http://gdata.youtube.com/schemas/2007/categories.cat" term="People" label="People &amp;amp; Blogs" /&gt;
+        &lt;category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="SmartDraw" /&gt;
+        &lt;category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="flowcharts" /&gt;
+        &lt;category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="visuals" /&gt;
+        &lt;category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="communicate" /&gt;
+        &lt;category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="visually" /&gt;
+        &lt;category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="communication" /&gt;
+        &lt;category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="powerpoint" /&gt;
+        &lt;category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="presentations" /&gt;
+        &lt;category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="mind" /&gt;
+        &lt;category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="maps" /&gt;
+        &lt;category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="software" /&gt;
+        &lt;category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="Business" /&gt;
+        &lt;category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="graphics" /&gt;
+        &lt;category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="strategic" /&gt;
+        &lt;category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="planning" /&gt;
+        &lt;category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="solutions" /&gt;
+        &lt;category scheme="http://gdata.youtube.com/schemas/2007/keywords.cat" term="tools" /&gt;
+        &lt;title&gt;SmartDraw 2010 Guided Tour&lt;/title&gt;
+        &lt;content type="application/x-shockwave-flash" src="http://www.youtube.com/v/NJPrllhYZrg?f=user_uploads&amp;amp;d=AWaEdOkfU7AZas-hLyE9s8EO88HsQjpE1a8d1GxQnGDm&amp;amp;app=youtube_gdata" /&gt;
+        &lt;link rel="alternate" type="text/html" href="http://www.youtube.com/watch?v=NJPrllhYZrg&amp;amp;feature=youtube_gdata" /&gt;
+        &lt;link rel="http://gdata.youtube.com/schemas/2007#video.responses" type="application/atom+xml" href="http://gdata.youtube.com/feeds/api/videos/NJPrllhYZrg/responses?v=2" /&gt;
+        &lt;link rel="http://gdata.youtube.com/schemas/2007#video.ratings" type="application/atom+xml" href="http://gdata.youtube.com/feeds/api/videos/NJPrllhYZrg/ratings?v=2" /&gt;
+        &lt;link rel="http://gdata.youtube.com/schemas/2007#video.complaints" type="application/atom+xml" href="http://gdata.youtube.com/feeds/api/videos/NJPrllhYZrg/complaints?v=2" /&gt;
+        &lt;link rel="http://gdata.youtube.com/schemas/2007#video.related" type="application/atom+xml" href="http://gdata.youtube.com/feeds/api/videos/NJPrllhYZrg/related?v=2" /&gt;
+        &lt;link rel="http://gdata.youtube.com/schemas/2007#mobile" type="text/html" href="http://m.youtube.com/details?v=NJPrllhYZrg" /&gt;
+        &lt;link rel="self" type="application/atom+xml" href="http://gdata.youtube.com/feeds/api/users/smartdraw/uploads/NJPrllhYZrg?v=2" /&gt;
+        &lt;author&gt;
+        &lt;name&gt;smartdraw&lt;/name&gt;
+        &lt;uri&gt;http://gdata.youtube.com/feeds/api/users/smartdraw&lt;/uri&gt;
+        &lt;/author&gt;
+        &lt;yt:accessControl action="comment" permission="allowed" /&gt;
+        &lt;yt:accessControl action="commentVote" permission="allowed" /&gt;
+        &lt;yt:accessControl action="videoRespond" permission="moderated" /&gt;
+        &lt;yt:accessControl action="rate" permission="allowed" /&gt;
+        &lt;yt:accessControl action="embed" permission="allowed" /&gt;
+        &lt;yt:accessControl action="syndicate" permission="allowed" /&gt;
+        &lt;gd:comments&gt;
+        &lt;gd:feedLink href="http://gdata.youtube.com/feeds/api/videos/NJPrllhYZrg/comments?v=2" countHint="0" /&gt;
+        &lt;/gd:comments&gt;
+        &lt;media:group&gt;
+        &lt;media:credit role="uploader" scheme="urn:youtube"&gt;smartdraw&lt;/media:credit&gt;
+        &lt;media:description type="plain"&gt;Explains the features of SmartDraw, the software that allows you produce any visual, whether it's a flowchart or a floor plan, in a matter of minutes.
+        Download a free trial of SmartDraw here: http://www.smartdraw.com/downloads/?id=343742&lt;/media:description&gt;
+        &lt;media:keywords&gt;SmartDraw, flowcharts, visuals, communicate, visually, communication, powerpoint, presentations, mind, maps, software, Business, graphics, strategic, planning, solutions, tools&lt;/media:keywords&gt;
+        &lt;media:player url="http://www.youtube.com/watch?v=NJPrllhYZrg&amp;amp;feature=youtube_gdata" /&gt;
+        &lt;media:thumbnail url="http://i.ytimg.com/vi/NJPrllhYZrg/default.jpg" height="90" width="120" time="00:03:21" /&gt;
+        &lt;media:thumbnail url="http://i.ytimg.com/vi/NJPrllhYZrg/2.jpg" height="90" width="120" time="00:03:21" /&gt;
+        &lt;media:thumbnail url="http://i.ytimg.com/vi/NJPrllhYZrg/1.jpg" height="90" width="120" time="00:01:40.500" /&gt;
+        &lt;media:thumbnail url="http://i.ytimg.com/vi/NJPrllhYZrg/3.jpg" height="90" width="120" time="00:05:01.500" /&gt;
+        &lt;media:thumbnail url="http://i.ytimg.com/vi/NJPrllhYZrg/hqdefault.jpg" height="360" width="480" /&gt;
+        &lt;media:title type="plain"&gt;SmartDraw 2010 Guided Tour&lt;/media:title&gt;
+        &lt;yt:duration seconds="402" /&gt;
+        &lt;yt:uploaded&gt;2010-02-10T23:27:38.000Z&lt;/yt:uploaded&gt;
+        &lt;yt:videoid&gt;NJPrllhYZrg&lt;/yt:videoid&gt;
+        &lt;/media:group&gt;
+        &lt;gd:rating average="4.4444447" max="5" min="1" numRaters="9" rel="http://schemas.google.com/g/2005#overall" /&gt;
+        &lt;yt:statistics favoriteCount="9" viewCount="16206" /&gt;
+        &lt;yt:rating numDislikes="1" numLikes="8" /&gt;
+        &lt;/entry&gt;
+        &lt;/feed&gt;</pre>
+        <p>Now, here are use cases for how I might want to use this format:</p>
+        <ol>
+        <li>The GData API will only serve a maximum of 50 entries at any given time - one way to paginate through all of the entries in one go is to parse the <span style="font-family: courier new,courier;">link rel="next</span>" field and query that URL until the field no longer exists. Is there a way you can use a POCO class in Hammock or RestSharp to automatically grab this field between queries against the API?</li>
+        <li>Imagine you create a POCO class which contains the YouTube video ID, the author's username, the number of comments on the video, the keywords for the video, the number of views, and the number of the number of favorites. How would you structure this class such that RestSharp or HammockREST can automatically parse it from an ATOM response format like the one above? Bear in mind that these fields come from four of the five different XML namespaces (atom, Media RSS [media], GData [gd], and YouTube [yt]) used in this response format.</li>
+        </ol>
+        <div class="addthis_toolbox addthis_default_style"  style="padding-top:10px" >
+        <a style="padding-right:10px" href="http://www.addthis.com/bookmark.php?v=250&username=aaronontheweb&url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f06%2f08%2fRestSharp-Hammock-Parse-YouTube.aspx&title=Discussion%3a+How+to+Use+RestSharp+%2f+Hammock+to+Automatically+Parse+the+YouTube+Response+Format+into+POCO+Objects&description="><img src="http://s7.addthis.com/static/btn/v2/sm-share-en.gif"  alt="Bookmark and Share" style="border:0"/></a>
+        <a  style="padding-right:10px" href="http://www.addthis.com/bookmark.php?v=250&username=aaronontheweb&url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f06%2f08%2fRestSharp-Hammock-Parse-YouTube.aspx&title=Discussion%3a+How+to+Use+RestSharp+%2f+Hammock+to+Automatically+Parse+the+YouTube+Response+Format+into+POCO+Objects&description=&s=dotnetkicks"><img  src="http://dotnetkicks.com/Services/Images/KickItImageGenerator.ashx?url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f06%2f08%2fRestSharp-Hammock-Parse-YouTube.aspx" border="0" alt="DotnetKicks" /></a>
+        <a style="padding-right:10px" href="http://www.addthis.com/bookmark.php?v=250&username=aaronontheweb&url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f06%2f08%2fRestSharp-Hammock-Parse-YouTube.aspx&title=Discussion%3a+How+to+Use+RestSharp+%2f+Hammock+to+Automatically+Parse+the+YouTube+Response+Format+into+POCO+Objects&description=&s=dotnetshoutout"><img style="height:19px" height="19px" src="http://dotnetshoutout.com/image.axd?url=http%3a%2f%2fwww.aaronstannard.com%2fpost%2f2010%2f06%2f08%2fRestSharp-Hammock-Parse-YouTube.aspx" border="0" alt="dotnetshoutout" /></a>
+        </div><p style="margin-top:15px;"><em>If you enjoyed this post, remember to <a style="background:none;padding-right:0px;" href="http://www.aaronstannard.com/syndication.axd">subscribe to my RSS feed</a>!</em></p>
+      
+Categories: .NET YouTube 
+Comments: http://www.aaronstannard.com/post/2010/06/08/RestSharp-Hammock-Parse-YouTube.aspx#comment
+

@@ -1,0 +1,9 @@
+﻿<NUnitProject>
+  <Settings activeconfig="Debug" />
+  <Config name="Debug" binpathtype="Auto">
+    <assembly path="QFeedParser.Tests\bin\Debug\QDFeedParser.Tests.dll" />
+  </Config>
+  <Config name="Release" binpathtype="Auto">
+    <assembly path="QFeedParser.Tests\bin\Release\QDFeedParser.Tests.dll" />
+  </Config>
+</NUnitProject>

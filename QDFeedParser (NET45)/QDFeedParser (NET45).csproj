@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{15D8147D-3BF9-40F2-B35C-6CCDEBFAF643}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>QDFeedParser</RootNamespace>
+    <AssemblyName>QDFeedParser</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;FRAMEWORK</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;FRAMEWORK</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\QDFeedParser\AsyncFeedRequestState.cs">
+      <Link>AsyncFeedRequestState.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\Atom10Feed.cs">
+      <Link>Atom10Feed.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\Atom10FeedItem.cs">
+      <Link>Atom10FeedItem.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\BaseFeedFactory.cs">
+      <Link>BaseFeedFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\BaseFeedItem.cs">
+      <Link>BaseFeedItem.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\BaseSyndicationFeed.cs">
+      <Link>BaseSyndicationFeed.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\DefaultFeedInstanceProvider.cs">
+      <Link>DefaultFeedInstanceProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\FeedTuple.cs">
+      <Link>FeedTuple.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\FeedType.cs">
+      <Link>FeedType.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\FileSystemFeedFactory.cs">
+      <Link>FileSystemFeedFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\HttpFeedFactory.cs">
+      <Link>HttpFeedFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\IFeed.cs">
+      <Link>IFeed.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\IFeedFactory.cs">
+      <Link>IFeedFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\IFeedInstanceProvider.cs">
+      <Link>IFeedInstanceProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\IFeedItem.cs">
+      <Link>IFeedItem.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\QDFeedExceptions.cs">
+      <Link>QDFeedExceptions.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\Rss20Feed.cs">
+      <Link>Rss20Feed.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\Rss20FeedItem.cs">
+      <Link>Rss20FeedItem.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\Xml\FeedXmlParserBase.cs">
+      <Link>Xml\FeedXmlParserBase.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\Xml\IFeedXmlParser.cs">
+      <Link>Xml\IFeedXmlParser.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\Xml\LinqFeedXmlParser.cs">
+      <Link>Xml\LinqFeedXmlParser.cs</Link>
+    </Compile>
+    <Compile Include="..\QDFeedParser\Xml\XpathFeedXmlParser.cs">
+      <Link>Xml\XpathFeedXmlParser.cs</Link>
+    </Compile>
+    <Compile Include="BaseFeedFactory.async.cs" />
+    <Compile Include="FileSystemFeedFactory.async.cs" />
+    <Compile Include="HttpFeedFactory.async.cs" />
+    <Compile Include="IFeedFactory.async.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

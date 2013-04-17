@@ -1,0 +1,200 @@
+C:/Repositories/qdrss/QFeedParser.Tests/Test%20Files/Valid/FileSys/Atom/YouTube-Atom.xml[0] = Title: SmartDraw 2010 Guided Tour
+Published: 5/31/2010 9:48:53 PM
+URL: http://www.youtube.com/watch?v=NJPrllhYZrg&feature=youtube_gdata
+Author: 
+Id: tag:youtube.com,2008:video:NJPrllhYZrg
+Content: 
+Categories: 
+
+C:/Repositories/qdrss/QFeedParser.Tests/Test%20Files/Valid/FileSys/Atom/YouTube-Atom.xml[1] = Title: How to Manage a Project with SmartDraw
+Published: 5/31/2010 8:59:14 PM
+URL: http://www.youtube.com/watch?v=54AHBOA1jJ0&feature=youtube_gdata
+Author: 
+Id: tag:youtube.com,2008:video:54AHBOA1jJ0
+Content: 
+Categories: 
+
+C:/Repositories/qdrss/QFeedParser.Tests/Test%20Files/Valid/FileSys/Atom/YouTube-Atom.xml[2] = Title: How to Document and Improve Processes with SmartDraw
+Published: 5/30/2010 12:25:38 PM
+URL: http://www.youtube.com/watch?v=SfYjkcQofaA&feature=youtube_gdata
+Author: 
+Id: tag:youtube.com,2008:video:SfYjkcQofaA
+Content: 
+Categories: 
+
+C:/Repositories/qdrss/QFeedParser.Tests/Test%20Files/Valid/FileSys/Atom/YouTube-Atom.xml[3] = Title: How to Make Presentations with SmartDraw
+Published: 5/31/2010 5:29:13 PM
+URL: http://www.youtube.com/watch?v=tn5k0sFUgnw&feature=youtube_gdata
+Author: 
+Id: tag:youtube.com,2008:video:tn5k0sFUgnw
+Content: 
+Categories: 
+
+C:/Repositories/qdrss/QFeedParser.Tests/Test%20Files/Valid/FileSys/Atom/YouTube-Atom.xml[4] = Title: Improve Teamwork with Org and Team Charts
+Published: 5/20/2010 7:12:08 PM
+URL: http://www.youtube.com/watch?v=PBbAzdSOn7w&feature=youtube_gdata
+Author: 
+Id: tag:youtube.com,2008:video:PBbAzdSOn7w
+Content: 
+Categories: 
+
+C:/Repositories/qdrss/QFeedParser.Tests/Test%20Files/Valid/FileSys/Atom/YouTube-Atom.xml[5] = Title: Organizing Your Ideas with Mind Maps
+Published: 5/31/2010 5:29:12 PM
+URL: http://www.youtube.com/watch?v=Amzipn5xw7s&feature=youtube_gdata
+Author: 
+Id: tag:youtube.com,2008:video:Amzipn5xw7s
+Content: 
+Categories: 
+
+C:/Repositories/qdrss/QFeedParser.Tests/Test%20Files/Valid/FileSys/Atom/YouTube-Atom.xml[6] = Title: How to Create Compelling Charts and Graphs with SmartDraw
+Published: 5/30/2010 11:44:45 AM
+URL: http://www.youtube.com/watch?v=xvTCQLeV7qU&feature=youtube_gdata
+Author: 
+Id: tag:youtube.com,2008:video:xvTCQLeV7qU
+Content: 
+Categories: 
+
+C:/Repositories/qdrss/QFeedParser.Tests/Test%20Files/Valid/FileSys/Atom/YouTube-Atom.xml[7] = Title: SmartDraw Vs Visio
+Published: 5/31/2010 1:49:00 PM
+URL: http://www.youtube.com/watch?v=L7JVmhxRZp8&feature=youtube_gdata
+Author: 
+Id: tag:youtube.com,2008:video:L7JVmhxRZp8
+Content: 
+Categories: 
+
+C:/Repositories/qdrss/QFeedParser.Tests/Test%20Files/Valid/FileSys/Atom/YouTube-Atom.xml[8] = Title: Introduction to SmartDraw 2010 Upgrade
+Published: 5/31/2010 6:22:06 PM
+URL: http://www.youtube.com/watch?v=-PWqMCWiCpQ&feature=youtube_gdata
+Author: 
+Id: tag:youtube.com,2008:video:-PWqMCWiCpQ
+Content: 
+Categories: 
+
+C:/Repositories/qdrss/QFeedParser.Tests/Test%20Files/Valid/FileSys/Atom/YouTube-Atom.xml[9] = Title: New SmartDraw 2010 Timesavers
+Published: 5/30/2010 11:04:22 AM
+URL: http://www.youtube.com/watch?v=fDv-9x83GTI&feature=youtube_gdata
+Author: 
+Id: tag:youtube.com,2008:video:fDv-9x83GTI
+Content: 
+Categories: 
+
+C:/Repositories/qdrss/QFeedParser.Tests/Test%20Files/Valid/FileSys/Atom/YouTube-Atom.xml[10] = Title: Managing Time & Resources with SmartDraw 2010
+Published: 3/31/2010 12:48:42 AM
+URL: http://www.youtube.com/watch?v=VSDxWqkwVIw&feature=youtube_gdata
+Author: 
+Id: tag:youtube.com,2008:video:VSDxWqkwVIw
+Content: 
+Categories: 
+
+C:/Repositories/qdrss/QFeedParser.Tests/Test%20Files/Valid/FileSys/Atom/YouTube-Atom.xml[11] = Title: Create Killer Presentations with SmartDraw 2010
+Published: 5/30/2010 3:56:00 PM
+URL: http://www.youtube.com/watch?v=60qq_24JaQE&feature=youtube_gdata
+Author: 
+Id: tag:youtube.com,2008:video:60qq_24JaQE
+Content: 
+Categories: 
+
+C:/Repositories/qdrss/QFeedParser.Tests/Test%20Files/Valid/FileSys/Atom/YouTube-Atom.xml[12] = Title: Collaborate with SmartDraw 2010
+Published: 2/5/2010 8:51:15 PM
+URL: http://www.youtube.com/watch?v=5-zCjjoyk1k&feature=youtube_gdata
+Author: 
+Id: tag:youtube.com,2008:video:5-zCjjoyk1k
+Content: 
+Categories: 
+
+C:/Repositories/qdrss/QFeedParser.Tests/Test%20Files/Valid/FileSys/Atom/YouTube-Atom.xml[13] = Title: Automatically Create a Complete PowerPoint Slideshow
+Published: 5/30/2010 3:17:24 PM
+URL: http://www.youtube.com/watch?v=GEwEY8Ackv0&feature=youtube_gdata
+Author: 
+Id: tag:youtube.com,2008:video:GEwEY8Ackv0
+Content: 
+Categories: 
+
+C:/Repositories/qdrss/QFeedParser.Tests/Test%20Files/Valid/FileSys/Atom/YouTube-Atom.xml[14] = Title: Annotate a Map
+Published: 5/28/2010 5:33:28 PM
+URL: http://www.youtube.com/watch?v=VJfNOjl3Frg&feature=youtube_gdata
+Author: 
+Id: tag:youtube.com,2008:video:VJfNOjl3Frg
+Content: 
+Categories: 
+
+C:/Repositories/qdrss/QFeedParser.Tests/Test%20Files/Valid/FileSys/Atom/YouTube-Atom.xml[15] = Title: Easily Create 3D Charts
+Published: 5/24/2010 9:22:27 PM
+URL: http://www.youtube.com/watch?v=nJjrZJp7YEM&feature=youtube_gdata
+Author: 
+Id: tag:youtube.com,2008:video:nJjrZJp7YEM
+Content: 
+Categories: 
+
+C:/Repositories/qdrss/QFeedParser.Tests/Test%20Files/Valid/FileSys/Atom/YouTube-Atom.xml[16] = Title: Control the Sequencing Order of Your Diagrams
+Published: 5/16/2010 9:29:40 PM
+URL: http://www.youtube.com/watch?v=zex3BhjI5Kk&feature=youtube_gdata
+Author: 
+Id: tag:youtube.com,2008:video:zex3BhjI5Kk
+Content: 
+Categories: 
+
+C:/Repositories/qdrss/QFeedParser.Tests/Test%20Files/Valid/FileSys/Atom/YouTube-Atom.xml[17] = Title: Link Job Descriptions to Org Charts
+Published: 5/30/2010 2:10:58 AM
+URL: http://www.youtube.com/watch?v=TOlQjH0brrc&feature=youtube_gdata
+Author: 
+Id: tag:youtube.com,2008:video:TOlQjH0brrc
+Content: 
+Categories: 
+
+C:/Repositories/qdrss/QFeedParser.Tests/Test%20Files/Valid/FileSys/Atom/YouTube-Atom.xml[18] = Title: Automatically Develop a Sitemap
+Published: 4/16/2010 11:19:31 AM
+URL: http://www.youtube.com/watch?v=vEourCP4GSg&feature=youtube_gdata
+Author: 
+Id: tag:youtube.com,2008:video:vEourCP4GSg
+Content: 
+Categories: 
+
+C:/Repositories/qdrss/QFeedParser.Tests/Test%20Files/Valid/FileSys/Atom/YouTube-Atom.xml[19] = Title: Export Mind Maps into a Plain text Outline Format
+Published: 5/23/2010 9:27:45 PM
+URL: http://www.youtube.com/watch?v=YR6aOycl0pc&feature=youtube_gdata
+Author: 
+Id: tag:youtube.com,2008:video:YR6aOycl0pc
+Content: 
+Categories: 
+
+C:/Repositories/qdrss/QFeedParser.Tests/Test%20Files/Valid/FileSys/Atom/YouTube-Atom.xml[20] = Title: Easily Email SmartDraw Diagrams to Others
+Published: 4/29/2010 7:59:07 AM
+URL: http://www.youtube.com/watch?v=IjgJGCOfXTc&feature=youtube_gdata
+Author: 
+Id: tag:youtube.com,2008:video:IjgJGCOfXTc
+Content: 
+Categories: 
+
+C:/Repositories/qdrss/QFeedParser.Tests/Test%20Files/Valid/FileSys/Atom/YouTube-Atom.xml[21] = Title: Create and Print a Poster
+Published: 5/25/2010 4:24:04 PM
+URL: http://www.youtube.com/watch?v=0n_a4zdcBLg&feature=youtube_gdata
+Author: 
+Id: tag:youtube.com,2008:video:0n_a4zdcBLg
+Content: 
+Categories: 
+
+C:/Repositories/qdrss/QFeedParser.Tests/Test%20Files/Valid/FileSys/Atom/YouTube-Atom.xml[22] = Title: Customize Your Gantt Charts
+Published: 5/20/2010 9:37:18 PM
+URL: http://www.youtube.com/watch?v=x2Wg5p4FTXA&feature=youtube_gdata
+Author: 
+Id: tag:youtube.com,2008:video:x2Wg5p4FTXA
+Content: 
+Categories: 
+
+C:/Repositories/qdrss/QFeedParser.Tests/Test%20Files/Valid/FileSys/Atom/YouTube-Atom.xml[23] = Title: Capture and Annotate a Webpage
+Published: 5/17/2010 9:10:36 PM
+URL: http://www.youtube.com/watch?v=LkO7WOMqg2M&feature=youtube_gdata
+Author: 
+Id: tag:youtube.com,2008:video:LkO7WOMqg2M
+Content: 
+Categories: 
+
+C:/Repositories/qdrss/QFeedParser.Tests/Test%20Files/Valid/FileSys/Atom/YouTube-Atom.xml[24] = Title: Export to PDF in One Click with SmartDraw
+Published: 4/1/2010 4:03:25 PM
+URL: http://www.youtube.com/watch?v=hmmaIU3hJbo&feature=youtube_gdata
+Author: 
+Id: tag:youtube.com,2008:video:hmmaIU3hJbo
+Content: 
+Categories: 
+
