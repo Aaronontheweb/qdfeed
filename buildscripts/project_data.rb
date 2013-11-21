@@ -6,7 +6,7 @@ Projects = {
 	:language => "en-US",
 	:licenseUrl => "https://github.com/Aaronontheweb/qdfeed/blob/master/license.txt",
 	:projectUrl => "https://github.com/Aaronontheweb/qdfeed",
-
+	:nuget_id => "qdfeed",
 	:qdfeed =>{
 		:id => "QDFeedParser",
 		:description => "A lightweight .NET library designed to give developers an agnostic way of parsing RSS 2.0 and Atom 1.0 XML syndication formats.",
@@ -16,7 +16,7 @@ Projects = {
 		:title => "Quick and Dirty Feed Parser"
 	},
 	:qdfeed_net45 =>{
-		:id => "QDFeedParser (NET45)",
+		:id => "QDFeedParser",
 		:description => "A lightweight .NET library designed to give developers an agnostic way of parsing RSS 2.0 and Atom 1.0 XML syndication formats (.NET 4.5 support)",
 		:authors => "Aaron Stannard",
 		:dir => "QDFeedParser (NET45)",
@@ -31,7 +31,7 @@ Projects = {
 		:title => "Quick and Dirty Feed Parser (Windows Phone 7)"
 	},
 	:qdfeed_wp8 => {
-		:id => "QDFeedParser.Mobile (WP8)",
+		:id => "QDFeedParser.Mobile",
 		:description => "A lightweight .NET library designed to give developers an agnostic way of parsing RSS 2.0 and Atom 1.0 XML syndication formats (Windows Phone 8 support)",
 		:authors => "Aaron Stannard",
 		:dir => "QDFeedParser.Mobile (WP8)",
