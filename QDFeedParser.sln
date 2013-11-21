@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QDFeedParser.Silverlight", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QDFeedParser.Mobile", "QDFeedParser.Mobile\QDFeedParser.Mobile.csproj", "{FD48FCB3-8508-450E-A5AF-BD2A9A115BAB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QDFeedParser.Silverlight.Tests", "QDFeedParser.Silverlight.Tests\QDFeedParser.Silverlight.Tests.csproj", "{53368186-9891-4B97-88D1-174959296D92}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QDFeedParser.Mobile (WP8)", "QDFeedParser.Mobile (WP8)\QDFeedParser.Mobile (WP8).csproj", "{5D5E8118-8C5A-48AB-BAA4-0644044FBA2D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QDFeedParser (NET45)", "QDFeedParser (NET45)\QDFeedParser (NET45).csproj", "{15D8147D-3BF9-40F2-B35C-6CCDEBFAF643}"
@@ -81,18 +79,6 @@ Global
 		{FD48FCB3-8508-450E-A5AF-BD2A9A115BAB}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{FD48FCB3-8508-450E-A5AF-BD2A9A115BAB}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{FD48FCB3-8508-450E-A5AF-BD2A9A115BAB}.Release|x86.ActiveCfg = Release|Any CPU
-		{53368186-9891-4B97-88D1-174959296D92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{53368186-9891-4B97-88D1-174959296D92}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{53368186-9891-4B97-88D1-174959296D92}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{53368186-9891-4B97-88D1-174959296D92}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{53368186-9891-4B97-88D1-174959296D92}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{53368186-9891-4B97-88D1-174959296D92}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{53368186-9891-4B97-88D1-174959296D92}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{53368186-9891-4B97-88D1-174959296D92}.Release|Any CPU.Build.0 = Release|Any CPU
-		{53368186-9891-4B97-88D1-174959296D92}.Release|ARM.ActiveCfg = Release|Any CPU
-		{53368186-9891-4B97-88D1-174959296D92}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{53368186-9891-4B97-88D1-174959296D92}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{53368186-9891-4B97-88D1-174959296D92}.Release|x86.ActiveCfg = Release|Any CPU
 		{5D5E8118-8C5A-48AB-BAA4-0644044FBA2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5D5E8118-8C5A-48AB-BAA4-0644044FBA2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D5E8118-8C5A-48AB-BAA4-0644044FBA2D}.Debug|ARM.ActiveCfg = Debug|ARM

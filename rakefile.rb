@@ -157,7 +157,7 @@ output :silverlight_output => [:clean_output_directories, :create_output_directo
 end
 
 desc "All NuGet output"
-task :all_output => [:net35_output, :net45_output, :wp7_output
+task :all_output => [:net35_output, :net45_output, :wp7_output,
                     :wp8_output, :silverlight_output]
 
 #-----------------------

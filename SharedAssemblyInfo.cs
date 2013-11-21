@@ -1,14 +1,15 @@
+using System.Runtime.InteropServices;
 using System.Reflection;
 
 
 #if DEBUG
-    [assembly: AssemblyConfiguration("Debug")]
+[assembly: AssemblyConfiguration("Debug")]
 #else
-    [assembly: AssemblyConfiguration("Release")]
+[assembly: AssemblyConfiguration("Release")]
 #endif
 
 [assembly: AssemblyCompany("StannardLabs")]
 [assembly: AssemblyCopyright("Copyright © 2010-2013 Aaron Stannard")]
 
-[assembly: AssemblyVersion("1.0.1.0")]
-[assembly: AssemblyFileVersion("1.0.1.0")]
+[assembly: AssemblyVersion("1.0.2.3")]
+[assembly: AssemblyFileVersion("1.0.2.3")]
