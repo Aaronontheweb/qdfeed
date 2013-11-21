@@ -158,6 +158,9 @@
     <Compile Include="..\QDFeedParser\Xml\LinqFeedXmlParser.cs">
       <Link>Xml\LinqFeedXmlParser.cs</Link>
     </Compile>
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Extensions\HttpExtensions.cs" />
     <Compile Include="IsolatedStorageFeedFactory.async.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("QDFeedParser (.NET 4.5)")]
+[assembly: AssemblyTitle("QDFeedParser (NET45)")]
 [assembly: AssemblyDescription("Open source ATOM/RSS parsing library")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
