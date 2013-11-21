@@ -9,6 +9,7 @@ using QDFeedParser.Tests.Extensions;
 
 namespace QDFeedParser.Tests.SyndicationFeed.Valid
 {
+    [Ignore("Test runner can't use approval tests")]
     [TestFixture]
     public class RssApprovalTest
     {

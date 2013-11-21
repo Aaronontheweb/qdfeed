@@ -163,7 +163,7 @@ task :all_output => [:net35_output, :net45_output, :wp7_output,
 #-----------------------
 # NuSpec
 #-----------------------
-nuspec :qdfeed_nuspec do |nuspec|
+nuspec :qdfeed_nuspec => [:all_output] do |nuspec|
     nuspec.id = Projects[:nuget_id]
     nuspec.version = env_buildversion
     nuspec.authors = Projects[:qdfeed][:authors]
