@@ -3,6 +3,9 @@
 # use glob syntax
 syntax: glob
 
+# build output
+build/
+
 #Ruby
 Gemfile.lock
 

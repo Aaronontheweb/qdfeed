@@ -21,6 +21,11 @@ def env_buildversion
     bumper_version.to_s
 end
 
+def env_nuget_version
+    version = env_buildversion.split(".")
+    "#{version[0]}.#{version[1]}.#{version[2]}"
+end
+
 #-----------------------
 # Control-Flow
 #-----------------------
@@ -151,7 +156,7 @@ end
 
 desc "Bin output for QDFeed.Silverlight"
 output :silverlight_output => [:clean_output_directories, :create_output_directories] do |out|
-    out.from Folders[:qdfeed_silverlight_bin]
+    out.from Folders[:qdfeed_sl4_bin]
     out.to Folders[:qdfeed_nuspec][:sl4]
     out.file Files[:qdfeed_silverlight_bin][:bin]
 end
@@ -165,14 +170,14 @@ task :all_output => [:net35_output, :net45_output, :wp7_output,
 #-----------------------
 nuspec :qdfeed_nuspec => [:all_output] do |nuspec|
     nuspec.id = Projects[:nuget_id]
-    nuspec.version = env_buildversion
+    nuspec.version = env_nuget_version
     nuspec.authors = Projects[:qdfeed][:authors]
     nuspec.description = Projects[:qdfeed][:description]
     nuspec.title = Projects[:qdfeed][:title]
     nuspec.language = Projects[:language]
     nuspec.licenseUrl = Projects[:licenseUrl]
     nuspec.projectUrl = Projects[:projectUrl]
-    nuspec.output_file = File.join(Folders[:nuget_build], "#{Projects[:qdfeed][:id]}(#{@env_buildconfigname})-v#{env_buildversion}.nuspec")
+    nuspec.output_file = File.join(Folders[:nuget_build], "#{Projects[:qdfeed][:id]}(#{@env_buildconfigname})-v#{env_nuget_version}.nuspec")
     nuspec.tags = "rss atom rss2.0 atom1.0 syndication qdfeed qdrss feeds xml parsing net40"
 end
 
@@ -182,7 +187,7 @@ end
 desc "Packs a build of the MarkedUp WinRT SDK into a NuGet package"
 nugetpack :qdfeed_pack => [:qdfeed_nuspec] do |nuget|
     nuget.command = Commands[:nuget]
-    nuget.nuspec = File.join(Folders[:nuget_build], "#{Projects[:qdfeed][:id]}-v#{env_nuget_version}(#{@env_buildconfigname}).nuspec")
-    nuget.base_folder = File.join(Folders[:nuget_build], Folders[:qdfeed_nuspec][:root])
+    nuget.nuspec = File.join(Folders[:nuget_build], "#{Projects[:qdfeed][:id]}(#{@env_buildconfigname})-v#{env_nuget_version}.nuspec")
+    nuget.base_folder = Folders[:qdfeed_nuspec][:root]
     nuget.output = Folders[:nuget_build]
 end
