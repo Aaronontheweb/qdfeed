@@ -20,7 +20,7 @@ Projects = {
 		:description => "A lightweight .NET library designed to give developers an agnostic way of parsing RSS 2.0 and Atom 1.0 XML syndication formats (.NET 4.5 support)",
 		:authors => "Aaron Stannard",
 		:dir => "QDFeedParser (NET45)",
-		:test_dir => "QFeedParser.Tests",
+		:test_dir => "QDFeedParser.Tests",
 		:title => "Quick and Dirty Feed Parser (.NET 4.5)"
 	},
 	:qdfeed_wp7 =>{

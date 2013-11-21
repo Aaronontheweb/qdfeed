@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<testcases>
+  <testcase>
+    <uri>http://www.aaronontheweb.com/nofeed/</uri>
+    <name>Missing URL</name>
+  </testcase>
+  <!--<testcase>
+    <uri>http://news.ycombinator/r2s</uri>
+    <name>Malformed</name>
+  </testcase>-->
+</testcases>

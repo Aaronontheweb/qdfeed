@@ -1,0 +1,135 @@
+feed items[0] = Title: Simulate a Windows Service using ASP.NET to run scheduled jobs - CodeProject
+Published: 6/16/2010 5:45:37 PM
+URL: http://www.codeproject.com/KB/aspnet/ASPNETService.aspx
+Author: 
+Id: http://delicious.com/url/9e6381ba756d1cae074e3dfc5877043f#Aaronontheweb
+Content: 
+Categories: ASP.NET cache task Windows service 
+Comments: http://delicious.com/url/9e6381ba756d1cae074e3dfc5877043f
+
+feed items[1] = Title: Scheduled jobs in ASP.NET website without buying dedicated servers. - Stack Overflow
+Published: 6/16/2010 5:45:09 PM
+URL: http://stackoverflow.com/questions/733643/scheduled-jobs-in-asp-net-website-without-buying-dedicated-servers
+Author: 
+Id: http://delicious.com/url/3cc8fcb9748e44bb43162be0e4f3e998#Aaronontheweb
+Content: 
+Categories: ASP.NET scheduling tasks caching 
+Comments: http://delicious.com/url/3cc8fcb9748e44bb43162be0e4f3e998
+
+feed items[2] = Title: CodeCube.NET » ASP.NET MVC Charts
+Published: 6/15/2010 6:13:27 PM
+URL: http://codecube.net/2010/06/asp-net-mvc-charts/
+Author: 
+Id: http://delicious.com/url/4e2745bd9e9fda84cba2b702c958c86f#Aaronontheweb
+Content: An introduction to using the charting libraries in the ASP.NET MVC framework.
+Categories: .net chart MVC ASP.NET 
+Comments: http://delicious.com/url/4e2745bd9e9fda84cba2b702c958c86f
+
+feed items[3] = Title: http://john-sheehan.com/blog/wp-content/uploads/msnet-formatting-strings.pdf
+Published: 6/15/2010 6:56:13 AM
+URL: http://john-sheehan.com/blog/wp-content/uploads/msnet-formatting-strings.pdf
+Author: 
+Id: http://delicious.com/url/ac2df94770c37fe442a5ad6aa2025453#Aaronontheweb
+Content: A complete cheat sheet for all of the different datetime format strings in .NET
+Categories: .net c# string datetime ASP.NET system:filetype:pdf system:media:document 
+Comments: http://delicious.com/url/ac2df94770c37fe442a5ad6aa2025453
+
+feed items[4] = Title: Markov chain - Wikipedia, the free encyclopedia
+Published: 6/13/2010 1:50:41 AM
+URL: http://en.wikipedia.org/wiki/Markov_Chain
+Author: 
+Id: http://delicious.com/url/4981eb99e9a0effb024c1c30f5ed630a#Aaronontheweb
+Content: 
+Categories: statistics programming alogirthm datamining 
+Comments: http://delicious.com/url/4981eb99e9a0effb024c1c30f5ed630a
+
+feed items[5] = Title: tf–idf - term frequency-inverse document frequency
+Published: 6/13/2010 1:47:04 AM
+URL: http://en.wikipedia.org/wiki/Tf-idf
+Author: 
+Id: http://delicious.com/url/ca32a71ce919ac6aa5f2073458fccb64#Aaronontheweb
+Content: A statistical measure used in text / data mining to evaluate how important a particular word is to a document in a collection.
+Categories: algorithm datamining parsing 
+Comments: http://delicious.com/url/ca32a71ce919ac6aa5f2073458fccb64
+
+feed items[6] = Title: 25 Tools for Bootstrapped Startups
+Published: 6/9/2010 5:46:06 AM
+URL: http://storecrowd.com/blog/startup-tools/
+Author: 
+Id: http://delicious.com/url/46cd97851dae66d38a44e6c47c1a73cb#Aaronontheweb
+Content: 
+Categories: startup bootstrap entrepreneurship 
+Comments: http://delicious.com/url/46cd97851dae66d38a44e6c47c1a73cb
+
+feed items[7] = Title: The 'Microsoft.ACE.OLEDB.12.0' provider is not registered on the local machine.
+Published: 6/9/2010 2:35:23 AM
+URL: http://social.msdn.microsoft.com/Forums/en-US/vsto/thread/43d6b544-7172-4fe7-babf-a541e5f6a1c9
+Author: 
+Id: http://delicious.com/url/76148091405559c9e7f585261f0ac8fd#Aaronontheweb
+Content: 
+Categories: ole Microsoft excel 2007 .net 
+Comments: http://delicious.com/url/76148091405559c9e7f585261f0ac8fd
+
+feed items[8] = Title: Data Feed Query Explorer - Google Analytics - Google Code
+Published: 6/5/2010 12:06:53 AM
+URL: http://code.google.com/apis/analytics/docs/gdata/gdataExplorer.html
+Author: 
+Id: http://delicious.com/url/b250b7137de684846743bde8591a9795#Aaronontheweb
+Content: A tool for testing the GData feeds returned by the Google Analyitics Data Export API. It should be noted that this tool does not work in IE.
+Categories: Google API analytics tools data export 
+Comments: http://delicious.com/url/b250b7137de684846743bde8591a9795
+
+feed items[9] = Title: Window.DialogResult Property (System.Windows)
+Published: 6/5/2010 12:05:25 AM
+URL: http://msdn.microsoft.com/en-us/library/system.windows.window.dialogresult.aspx
+Author: 
+Id: http://delicious.com/url/71157f2b9b18d906bd54172758a90257#Aaronontheweb
+Content: Learned that in order for DialogResult to return true in the parent&#039;s context that the value has to be manually set to true by the &quot;ok&quot; button&#039;s click event. In Windows Forms this occurs automatically so this came as a surprise to me, but MSDN makes it clear in this documentation that that&#039;s what is going on.
+Categories: wpf .net c# dialogs 
+Comments: http://delicious.com/url/71157f2b9b18d906bd54172758a90257
+
+feed items[10] = Title: Windows Presentation Foundation (WPF) Dialog Boxes Overview
+Published: 6/4/2010 11:48:12 PM
+URL: http://msdn.microsoft.com/en-us/library/aa969773.aspx
+Author: 
+Id: http://delicious.com/url/586481cfeb62aa92708a096ef94db4c9#Aaronontheweb
+Content: How to use dialog boxes in WPF (for WPF noobs like myself.)
+Categories: .net wpf dialogs tutorial nullable c# 
+Comments: http://delicious.com/url/586481cfeb62aa92708a096ef94db4c9
+
+feed items[11] = Title: Developer's Guide: Data API Protocol - YouTube APIs and Tools - Google Code
+Published: 5/31/2010 10:43:47 PM
+URL: http://code.google.com/apis/youtube/2.0/developers_guide_protocol.html#Developer_Key
+Author: 
+Id: http://delicious.com/url/ee6024aa6f4bda652b8f3ebe08885037#Aaronontheweb
+Content: Finally figured it out - how to sign all requests with my API key using a querystring. So simple, yet so difficult.
+Categories: youtube API key Google gdata 
+Comments: http://delicious.com/url/ee6024aa6f4bda652b8f3ebe08885037
+
+feed items[12] = Title: Validation QuickStarts
+Published: 5/31/2010 6:19:15 PM
+URL: http://msdn.microsoft.com/en-us/library/ff649963.aspx
+Author: 
+Id: http://delicious.com/url/af057852abb236e5da1320b83fcbfe43#Aaronontheweb
+Content: A series of QuickStart tutorials for the Microsoft Enterprise Library Validation Application Block 4.1
+Categories: Microsoft Enterprise Library Validation Application Block .net tutorial 
+Comments: http://delicious.com/url/af057852abb236e5da1320b83fcbfe43
+
+feed items[13] = Title: Your first NHibernate based application - NHibernate Forge
+Published: 5/31/2010 6:18:04 PM
+URL: http://nhforge.org/wikis/howtonh/your-first-nhibernate-based-application.aspx
+Author: 
+Id: http://delicious.com/url/266e90fd6c4e22a386e98cf6b1a96ef5#Aaronontheweb
+Content: 
+Categories: C# .net nhibernate DAL data tutorial 
+Comments: http://delicious.com/url/266e90fd6c4e22a386e98cf6b1a96ef5
+
+feed items[14] = Title: Google Weather API with RestSharp « lukencode
+Published: 5/31/2010 6:17:22 PM
+URL: http://lukencode.com/2010/04/14/google-weather-api-with-restsharp/
+Author: 
+Id: http://delicious.com/url/0c72ee6d73c359d2c06372e2a15ede38#Aaronontheweb
+Content: 
+Categories: Google Weather RestSharp REST .net 
+Comments: http://delicious.com/url/0c72ee6d73c359d2c06372e2a15ede38
+

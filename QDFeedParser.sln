@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QDFeedParser", "QDFeedParser\QDFeedParser.csproj", "{9276EC71-7DCA-4AAF-A4C2-F0B42964F4ED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QDFeedParser.Tests", "QFeedParser.Tests\QDFeedParser.Tests.csproj", "{BD45F191-799A-464D-8391-6CDBCDBC9115}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QDFeedParser.Tests", "QDFeedParser.Tests\QDFeedParser.Tests.csproj", "{BD45F191-799A-464D-8391-6CDBCDBC9115}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QDFeedParser.Silverlight", "QDFeedParser.Silverlight\QDFeedParser.Silverlight.csproj", "{C2F4B5EE-E0B0-4E11-BA3A-3DBEBE3A0E52}"
 EndProject
