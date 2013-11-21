@@ -11,5 +11,5 @@ using System.Reflection;
 [assembly: AssemblyCompany("StannardLabs")]
 [assembly: AssemblyCopyright("Copyright © 2010-2013 Aaron Stannard")]
 
-[assembly: AssemblyVersion("1.0.2.17")]
-[assembly: AssemblyFileVersion("1.0.2.17")]
+[assembly: AssemblyVersion("1.1.0.1")]
+[assembly: AssemblyFileVersion("1.1.0.1")]
