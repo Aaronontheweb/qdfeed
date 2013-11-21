@@ -81,7 +81,7 @@ A "contributor" is any person that distributes its contribution under this licen
 
 4. Contributing to Quick and Dirty Feed Parser
 
-We'd love to have you contribute to the project and make it better. You can contribute to the project by going to http://qdfeed.codeplex.com/ 
+We'd love to have you contribute to the project and make it better. You can contribute to the project by going to https://github.com/Aaronontheweb/qdfeed
 and joining us on the discussion board, creating issues, or even better - forking the repository and committing changesets!
 
 Here's the software you're going to need to modify Quick and Dirty Feed Parser:
