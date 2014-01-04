@@ -1,5 +1,5 @@
 #####################################################################################################
-README: Quick and Dirty Feed Parser 1.01
+README: Quick and Dirty Feed Parser 1.1.0.1
 
 1. About Quick and Dirty Feed Parser
 2. Features
@@ -7,7 +7,7 @@ README: Quick and Dirty Feed Parser 1.01
 4. Contributing to Quick and Dirty Feed Parser
 
 Developed by Aaron Stannard (http://www.aaronstannard.com/) (Twitter: @Aaronontheweb)
-If you'd like to contribute to the project, join us at CodePlex! http://qdfeed.codeplex.com/
+If you'd like to contribute to the project, join us at CodePlex! https://github.com/Aaronontheweb/qdfeed
 
 #####################################################################################################
 
