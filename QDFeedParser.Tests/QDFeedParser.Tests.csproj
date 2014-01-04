@@ -108,7 +108,9 @@
     <Content Include="Test Files\Valid\FileSys\Atom\ScottGu-Atom.xml" />
     <Content Include="Test Files\Valid\FileSys\Atom\Ted-Atom.xml" />
     <Content Include="Test Files\Valid\FileSys\Atom\YouTube-Atom.xml" />
-    <Content Include="Test Files\Valid\FileSys\RSS\Aaronontheweb-RSS.xml" />
+    <Content Include="Test Files\Valid\FileSys\RSS\Aaronontheweb-RSS.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Test Files\Valid\FileSys\RSS\del.icio.us-RSS.xml" />
     <Content Include="Test Files\Valid\FileSys\RSS\HackerNews-RSS.xml" />
     <Content Include="Test Files\Valid\FileSys\RSS\TechCrunch-RSS.xml" />
