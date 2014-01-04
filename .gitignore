@@ -30,7 +30,6 @@ Gemfile.lock
 *.lib
 *.sbr
 *.scc
-*/extensions/**
 [Bb]in
 [Db]ebug*/
 obj/
