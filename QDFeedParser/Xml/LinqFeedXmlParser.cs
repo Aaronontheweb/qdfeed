@@ -70,9 +70,12 @@ namespace QDFeedParser.Xml
 
             var dateTimeNode = channel.Element(Atom10Namespace + "updated");
 
-            DateTime timeOut;
-            DateTime.TryParse(dateTimeNode.Value, out timeOut);
-            atomFeed.LastUpdated = timeOut.ToUniversalTime();
+	        if (dateTimeNode != null)
+	        {
+				DateTime timeOut;
+				DateTime.TryParse(dateTimeNode.Value, out timeOut);
+				atomFeed.LastUpdated = timeOut.ToUniversalTime();
+	        }
 
             var generatorNode = channel.Element(Atom10Namespace + "generator");
             atomFeed.Generator = generatorNode == null ? string.Empty : generatorNode.Value;
