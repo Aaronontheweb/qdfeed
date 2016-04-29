@@ -327,11 +327,6 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
-    <Compile Include="Extended\PodcastFeedInstanceProvider.cs" />
-    <Compile Include="Extended\PodcastRss20Feed.cs" />
-    <Compile Include="Extended\PodcastRss20FeedImage.cs" />
-    <Compile Include="Extended\PodcastRss20FeedItem.cs" />
-    <Compile Include="Extended\Xml\PodcastFeedXmlParser.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -371,9 +366,9 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\QDFeedParser %28NET45%29\QDFeedParser %28NET45%29.csproj">
-      <Project>{15d8147d-3bf9-40f2-b35c-6ccdebfaf643}</Project>
-      <Name>QDFeedParser %28NET45%29</Name>
+    <ProjectReference Include="..\QDFeedParser.UWP\QDFeedParser.UWP.csproj">
+      <Project>{7f3f5206-3cee-4200-ae88-98f7fdefc692}</Project>
+      <Name>QDFeedParser.UWP</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
