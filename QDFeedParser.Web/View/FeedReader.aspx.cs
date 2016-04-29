@@ -1,5 +1,4 @@
-﻿using QDFeedParser.Examples.Web.Extended;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -14,7 +13,7 @@ namespace QDFeedParser.Examples.Web.View
         protected void Page_Load(object sender, EventArgs e)
         {
 
-            HttpFeedFactory factory = new HttpFeedFactory(new Extended.Xml.PodcastFeedXmlParser(), new PodcastFeedInstanceProvider());
+            HttpFeedFactory factory = new HttpFeedFactory(new Xml.PodcastFeedXmlParser(), new PodcastFeedInstanceProvider());
             Uri url = new Uri(string.Format("http://feed.scicast.com.br/")); //http://feed.nerdcast.com.br  //http://feed.scicast.com.br/
             //Uri url = new Uri(string.Format("http://{0}/Examples/{1}.xml", HttpContext.Current.Request.Url.Authority, "nerdcast")); 
 
