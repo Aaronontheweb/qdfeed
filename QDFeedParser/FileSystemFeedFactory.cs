@@ -34,7 +34,7 @@ namespace QDFeedParser
             return DownloadXmlFromUri(feeduri).FeedContent;
         }
 
-        //Hacking asynchronous file IO just to make the interface consistent - there's not much performance benefit otheriwse
+        //Hacking asynchronous file IO just to make the interface consistent - there's not much performance benefit otherwise
         public override IAsyncResult BeginDownloadXml(Uri feeduri, AsyncCallback callback)
         {
             if (!this.PingFeed(feeduri)) throw new MissingFeedException(string.Format("Was unable to open local XML file {0}", feeduri.LocalPath));
